@@ -1,0 +1,8 @@
+
+commands:
+  git:          git st
+  hexo_server:  hexo server
+
+layout:
+  - [ git ]
+  - [ hexo_server ]

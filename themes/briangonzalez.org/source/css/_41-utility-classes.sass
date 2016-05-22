@@ -1,0 +1,18 @@
+
+.hidden
+  display: none
+
+.zag
+  display: inline-block
+  position: relative
+
+  &::before
+    content: ''
+    position: absolute
+    bottom: -1 * $grid-unit
+    height: $grid-unit/2
+    left: 0
+    width: 100%
+    background: url('/images/zag-white.svg')
+    background-repeat: repeat-x
+    opacity: 1

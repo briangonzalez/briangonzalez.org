@@ -1,0 +1,26 @@
+
+ul.posts
+  li
+    list-style-type: none
+    margin-bottom: $grid-unit
+    opacity: 0
+    animation: $anim-speed-slow fade-in $anim-ease-out-expo
+    animation-fill-mode: forwards
+    margin-bottom: $grid-unit * 2
+
+    @for $i from 1 through 100
+      &:nth-child(#{$i})
+        animation-delay: 100ms * $i
+
+    a
+      &::before
+        display: none
+        border: none
+
+      h2
+        margin-bottom: 0
+        position: relative
+
+      date
+        margin-bottom: 0
+        color: white

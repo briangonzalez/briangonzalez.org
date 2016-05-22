@@ -1,0 +1,58 @@
+
+h1, h2, h3, h4, h5, h6, strong
+  font-weight: 700
+
+h1, h2, h3, h4, h5, h6, p, date, pre
+  margin: 0
+  margin-bottom: $grid-unit * 1.5
+
+h1
+  color: $color-light
+  font-size: $grid-unit * 2
+  font-weight: 700
+  line-height: $grid-unit * 3
+  margin-bottom: $grid-unit * 3
+  animation: $anim-speed-med slide-and-grow-up $anim-ease-out-expo
+
+  &.page-title
+    margin-bottom: $grid-unit * 3
+
+p
+  opacity: 0
+  font-size: $grid-unit
+
+h2
+  font-weight: 600
+
+h3, date
+  font-size: 80%
+  font-weight: 400
+  display: inline-block
+  position: relative
+  text-transform: uppercase
+  font-family: $font-family-mono
+
+h3
+  text-transform: uppercase
+  letter-spacing: 2px
+  font-size: 80%
+
+  &:before
+    background: rgba($color-gray, 0.05)
+
+p > code,
+li > code
+  font-size: 75%
+  display: inline-block
+  padding-left: $grid-unit/2
+  padding-right: $grid-unit/2
+  border-radius: 2px
+  line-height: $grid-unit * 1.5
+  margin-top: $grid-unit/4
+  margin-bottom: $grid-unit/4
+  font-family: $font-family-mono
+  border: 1px solid $color-light - 20
+
+pre code.hljs
+  background: white
+  border: $grid-unit/2 solid $color-blue + 10

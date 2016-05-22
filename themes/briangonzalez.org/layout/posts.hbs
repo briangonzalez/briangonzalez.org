@@ -1,0 +1,15 @@
+
+<h1 class="main page-title">
+  <span class="zag">Posts</span>
+</h1>
+
+<ul class="posts">
+  {{#each site.posts.data}}
+    <li>
+      <a v-link="{ path: '/{{{this.path}}}' }" href="/{{{this.path}}}">
+        <h2>{{{ this.title }}}</h2>
+        <date>Published {{{ calendarDate this.date }}}</date>
+      </a>
+    </li>
+  {{/each}}
+</ul>

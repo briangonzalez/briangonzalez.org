@@ -1,0 +1,24 @@
+# Custom Plugins.
+webpack:
+  entry: 'themes/briangonzalez.org/source/js/app.js'
+  module:
+    loaders:
+      -
+        loader: 'babel-loader'
+
+autoprefixer:
+  exclude:
+    - '*.min.js'
+
+node_sass:
+  outputStyle: nested
+  precision: 5
+  sourceComments: false
+  indentedSyntax: true
+
+uglify:
+  mangle: false
+  output:
+  compress:
+  exclude:
+    - '*'

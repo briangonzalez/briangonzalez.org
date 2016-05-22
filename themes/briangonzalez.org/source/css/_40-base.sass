@@ -1,0 +1,70 @@
+
+*
+  box-sizing: border-box
+
+html, body
+  width: 100%
+  margin: 0
+  padding: 0
+
+::selection
+  background: $color-blue + 40
+
+.loader
+  display: none
+  position: fixed
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  background: $color-orange
+  z-index: 20
+
+html
+  background: $color-blue
+  background: linear-gradient(to right, $color-blue + 5 0%, $color-blue - 5 100%)
+
+body
+  color: white
+  font-size: $grid-unit
+  font-family: $font-family
+  font-weight: 300
+  line-height: $grid-unit * 2
+  text-rendering: optimizeLegibility
+  -webkit-font-smoothing: antialiased
+
+  display: flex
+  min-height: 100vh
+  flex-direction: column
+
+.body-border
+  content: ''
+  border: $grid-unit/2 solid white
+  position: fixed
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+  z-index: 1
+  pointer-events: none
+  display: none
+
+body:before,
+body:after
+  content: ""
+  position: fixed
+  background: white
+  left: 0
+  right: 0
+  height: $grid-unit/2
+  z-index: 1
+
+body:before
+  top: 0
+
+body:after
+  bottom: 0
+
+body
+  border-left: $grid-unit/2 solid white
+  border-right: $grid-unit/2 solid white

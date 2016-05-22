@@ -1,0 +1,7 @@
+@mixin from($bp)
+  @media only screen and (min-width: $bp + 1px)
+    @content
+
+@mixin to($bp)
+  @media only screen and (max-width: $bp)
+    @content

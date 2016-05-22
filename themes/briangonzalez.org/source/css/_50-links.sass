@@ -1,0 +1,23 @@
+a
+  display: inline-block
+  text-decoration: none
+  position: relative
+  font-weight: 700
+
+  &, &:hover, &:active
+    color: $color-orange
+
+  &::before
+    content: ''
+    position: absolute
+    bottom: 5px
+    left: 0
+    background: rgba($color-orange + 20, 0.25)
+    height: 8px
+    width: 100%
+    transition: all $anim-speed-med $anim-ease-out-expo
+    z-index: -1
+
+  &:hover::before
+    opacity: 1
+    transform: translate3d(0, 2px, 0)

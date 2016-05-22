@@ -1,0 +1,129 @@
+body
+  a.logo,
+  a.menulink
+    position: absolute
+    top: $grid-unit * 2
+    left: $grid-unit * 2
+    font-size: 85%
+    opacity: 0
+    font-weight: 700
+    animation: $anim-speed-slow-slow fade-in $anim-ease-out-expo
+    animation-delay: $anim-speed-slow
+    animation-fill-mode: forwards
+
+  a.logo
+    color: $color-blue
+    height: $grid-unit * 2
+    width: $grid-unit * 2
+    background: white
+    text-align: center
+    line-height: $grid-unit * 2
+    z-index: $z-logo
+
+    &::before
+      display: none
+
+  a.menulink
+    color: white
+    left: auto
+    right: $grid-unit * 2
+    animation: $anim-speed-fast slide-from-left $anim-ease-out-expo
+    animation-fill-mode: forwards
+    z-index: $z-menulink
+    text-transform: uppercase
+
+    &::before, &:hover::before
+      position: absolute
+      bottom: 0px
+      background: url('/images/zag-white.svg')
+      background-size: 10px
+      opacity: 1
+      transform: none
+      height: 5px
+      opacity: 1
+
+  .menu
+    pointer-events: none
+    border: $grid-unit/2 solid $color-blue
+    display: flex
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: $color-orange + 30
+    opacity: 0
+    align-items: center
+    justify-content: center
+    text-align: center
+    z-index: $z-menu
+    transform: scale(0.75) translate3d()
+    transition: all $anim-speed-fast $anim-ease-out-expo
+
+    .links
+      max-width: 50%
+      list-style-type: none
+      padding: 0
+
+      a
+        color: $color-blue
+        font-size: $grid-unit * 1.5
+        font-weight: 700
+        line-height: $grid-unit * 2
+
+        +from($bp-tablet)
+          font-size: $grid-unit * 2
+          line-height: $grid-unit * 4
+
+        &::before
+          background: rgba($color-blue, 0.1)
+
+      li
+        opacity: 0
+        margin-bottom: $grid-unit
+        transition: all $anim-speed-slow $anim-ease-out-expo
+        transform: translate3d(0, $transform-value, 0) scale(0.4)
+
+    &.shown
+      pointer-events: auto
+      opacity: 1
+      transform: scale(1) translate3d()
+
+      li
+        opacity: 1
+        transform: translate3d(0, 0, 0) scale(1)
+
+        @for $i from 1 through 10
+          &:nth-child(#{$i})
+            transition-duration: (200ms * $i)
+
+  .menu-close
+    position: fixed
+    top: $grid-unit * 3
+    right: $grid-unit * 2
+    cursor: pointer
+    height: $grid-unit * 2
+    width: $grid-unit * 2
+    overflow: visible
+    z-index: $z-menuclose
+    opacity: 0
+
+    &::before,
+    &::after
+      display: block
+      content: ''
+      background: $color-blue
+      width: $grid-unit * 2
+      height: 3px
+      transform: rotateZ(0) translate3d(0,0,0)
+      transition: all $anim-speed-med $anim-ease-out-expo
+      transform-origin: center
+
+    &.shown
+      opacity: 1
+
+      &::after
+        transform: rotateZ(-135deg) translate3d(0,0,0)
+
+      &::before
+        transform: rotateZ(135deg) translate3d(2px,-2px,0)

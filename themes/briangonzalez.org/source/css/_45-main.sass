@@ -1,0 +1,59 @@
+
+$mobile-top: $grid-unit * 6
+$mobile-side: $grid-unit * 2
+
+$desktop-top: $grid-unit * 15
+$desktop-side: $grid-unit * 10
+
+body
+  padding-top: $mobile-top
+
+  +from($bp-tablet)
+    padding-top: $desktop-top
+
+  main
+    padding-left: $mobile-side
+    padding-right: $mobile-side
+
+    // Sticky footer.
+    flex: 1
+
+    +from($bp-tablet)
+      padding-left: $desktop-side
+      padding-right: $desktop-side
+
+    ul,
+    figure,
+    section
+      padding: 0
+      margin: 0
+      margin-bottom: $grid-unit
+
+    & > *
+      opacity: 0
+      animation: $anim-speed-med fade-in $anim-ease-out-expo
+      animation-fill-mode: forwards
+
+      @for $i from 1 through 30
+        &:nth-child(#{$i})
+          animation-delay: 50ms * $i
+
+    section,
+    figure
+      padding: 0
+      margin: 0
+
+    pre
+      overflow-x: auto
+
+    p, h1, h2, h3, figure, section, pre, div, img
+      width: 100%
+
+      +from($bp-tablet)
+        width: $grid-unit * 28
+
+    table
+      margin-bottom: $grid-unit*2
+
+      tr
+        border: 1px solid $color-gray
