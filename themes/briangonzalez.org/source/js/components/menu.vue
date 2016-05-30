@@ -9,7 +9,7 @@
       <li><a v-link="{ path: '/' }">Home</a></li>
       <li><a v-link="{ path: '/posts' }">Posts</a></li>
       <li><a v-link="{ path: '/github' }">Github</a></li>
-      <li><a v-link="{ path: '/twitter' }">Twitter</a></li>
+      <li><a href="https://twitter.com/brianmgonzalez">Twitter</a></li>
       <li><a v-link="{ path: '/about' }">About</a></li>
     </ul>
   </section>

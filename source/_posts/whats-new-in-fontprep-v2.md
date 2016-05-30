@@ -43,7 +43,3 @@ tags:
 <h2 id='other_videos'>Other videos</h2>
 
 <p>View other FontPrep v2 demo videos on <a href='http://www.youtube.com/playlist?list=PL-pAsbCdKJwVe7OzdcEdBJ26ZluqdKiQp'>this YouTube playlist</a>.</p>
-<style>
-  .fp-logo{ width: 40% !important; display: block; margin: 5em auto; }
-  .demo-video{ width: 100% }
-</style>

@@ -107,6 +107,7 @@ router.beforeEach( function (transition) {
 
   store.emit('hideMenu');
   window.updateBodyURL();
+  window.scrollTo(0,0);
 
 });
 

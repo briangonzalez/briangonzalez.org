@@ -1,9 +1,44 @@
 footer
-  color: white
-  height: $grid-unit * 20
-  padding-top: $grid-unit * 20
+  @extend %container
   background: $color-blue + 5
-  margin-top: $grid-unit * 10
-  
+  padding-top: $grid-unit * 5
+  margin-top: $grid-unit * 5
+
+  .image
+    float: right
+    padding-top: $grid-unit * 4
+    text-align: center
+    height: $grid-unit * 20
+    background-image: url("/images/footer-brian.png")
+    background-size: $grid-unit * 20
+    background-repeat: no-repeat
+
+    body[data-url^="/github"] &
+      background-image: url("/images/footer-brian-dark.png")
+
+  ul,
+  .image
+    width: 100%
+
+    +from($bp-tablet)
+      width: 50%
+
+  ul
+    float: right
+    margin: 0
+    padding: 0
+
+    li
+      list-style-type: none
+      margin-bottom: $grid-unit
+      text-align: center
+
+      +from($bp-tablet)
+        text-align: left
+
+      a, a:hover
+        color: white
+        font-size: $grid-unit * 1.5
+
   body[data-url="/"] &
     display: none

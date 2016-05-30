@@ -5,3 +5,11 @@
 @mixin to($bp)
   @media only screen and (max-width: $bp)
     @content
+
+%container
+  padding-left: $mobile-side
+  padding-right: $mobile-side
+
+  +from($bp-tablet)
+    padding-left: $desktop-side
+    padding-right: $desktop-side

@@ -1,10 +1,4 @@
 
-$mobile-top: $grid-unit * 6
-$mobile-side: $grid-unit * 2
-
-$desktop-top: $grid-unit * 15
-$desktop-side: $grid-unit * 10
-
 body
   padding-top: $mobile-top
 
@@ -12,15 +6,10 @@ body
     padding-top: $desktop-top
 
   main
-    padding-left: $mobile-side
-    padding-right: $mobile-side
+    @extend %container
 
     // Sticky footer.
     flex: 1
-
-    +from($bp-tablet)
-      padding-left: $desktop-side
-      padding-right: $desktop-side
 
     ul,
     figure,
@@ -46,7 +35,7 @@ body
     pre
       overflow-x: auto
 
-    p, h1, h2, h3, figure, section, pre, div, img
+    p, h1, h2, h3, figure, section, pre, div, img, iframe
       width: 100%
 
       +from($bp-tablet)
@@ -57,3 +46,11 @@ body
 
       tr
         border: 1px solid $color-gray
+
+    ul
+      list-style-position: inside
+
+
+
+
+
