@@ -12,6 +12,11 @@ footer
     background-image: url("/images/footer-brian.png")
     background-size: $grid-unit * 20
     background-repeat: no-repeat
+    background-position: center
+    margin-top: $grid-unit * 3
+
+    +from($bp-tablet)
+      margin-top: 0
 
     body[data-url^="/github"] &
       background-image: url("/images/footer-brian-dark.png")

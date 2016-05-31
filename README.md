@@ -1,6 +1,19 @@
 
-- Webpack
-- Sass
-- Browsersync
-- Handlebars
-- Clean CSS
+### Installation
+
+```
+npm install
+```
+
+### Running
+
+```
+hexo server
+```
+
+### Deployment
+
+```
+hexo deploy
+```
+

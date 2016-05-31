@@ -12,7 +12,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://briangonzalez.org
+url: http://www.briangonzalez.org
 root: /
 permalink: posts/:title/
 permalink_defaults:
@@ -65,11 +65,6 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 theme: briangonzalez.org
 
-# Deployment
-## Docs: https://hexo.io/docs/deployment.html
-deploy:
-  type:
-
 node_sass:
   outputStyle: nested
   precision: 5
@@ -80,3 +75,9 @@ browsersync:
   ui:
     port: 8080
   notify: false
+
+deploy:
+  type: git
+  repo: git@github.com:briangonzalez/briangonzalez.org.git
+  branch: gh-pages
+  message: new commit
