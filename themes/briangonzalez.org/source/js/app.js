@@ -68,10 +68,10 @@ router.beforeEach( function (transition) {
       // Clear current main.
       var main = document.getElementsByTagName('main')[0];
       main.innerHTML = '';
-      main.classList = 'hidden';
+      main.classList.add('hidden');
 
       // Create template.
-      const wrapper= document.createElement('div');
+      var wrapper = document.createElement('div');
       wrapper.innerHTML= body;
       const div = wrapper.firstChild;
       const template = wrapper.getElementsByTagName('main')[0];
