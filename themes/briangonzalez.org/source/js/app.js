@@ -66,7 +66,7 @@ router.beforeEach( function (transition) {
     .then((body) => {
 
       // Clear current main.
-      let main = document.getElementsByTagName('main')[0];
+      var main = document.getElementsByTagName('main')[0];
       main.innerHTML = '';
       main.classList = 'hidden';
 
