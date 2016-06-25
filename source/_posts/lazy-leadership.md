@@ -4,7 +4,7 @@ date: 2016-06-19 20:42:42
 tags:
 ---
 
-I read a Medium post called [Lazy Leadership](https://medium.com/the-modern-team/lazy-leadership-8ba19e34f959) this weekend, and its points on delegation and build a team which operates like a machine resonated with me.
+I read a Medium post called [Lazy Leadership](https://medium.com/the-modern-team/lazy-leadership-8ba19e34f959) this weekend, and its points on delegation and building a team which operates like a machine resonated with me.
 
 > Some entrepreneurs never break through the delegation barrier and get stuck along the way. They try hiring someone, and when that person doesn’t behave exactly like they would, they jump in and take over.
 
@@ -24,7 +24,7 @@ Do they actually want this? Maybe, maybe not. Does this mean I should shield non
 
 ## Building the Machine
 
-> Once I started thinking about my business like a machine, I realized that there were people out there who relished the opportunity to travel for work and thrived doing the same thing. 
+> Once I started thinking about my business like a machine, I realized that there were people out there who relished the opportunity to travel for work and thrived doing the same thing.
 
 I can think of at least 2 things which I could hire for or delegate off of my plate to make the team more efficient:
 
