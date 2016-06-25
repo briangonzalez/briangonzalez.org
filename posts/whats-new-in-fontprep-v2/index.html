@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Brian Gonzalez | Developer</title>
+    <link rel="stylesheet" href="/css/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/images/favicon.png" sizes="192x192" type="image/png">
+  </head>
+
+  <body id="body" data-url="/">
+
+    <main role="main" id="main">
+        <div id="waves"></div>
+      
+<h1 class="main page-title">
+  <span class="zag">What's new in FontPrep v2?</span>
+</h1>
+
+<div>
+  <date>
+    Published 04/01/2013
+  </date>
+</div>
+
+<p>We&#8217;ve been working hard over the past month or so completely rewriting <a href="fontprep.com">FontPrep</a>, and we&#8217;re very pleased to announce that it&#8217;s finally ready for you! If you just want it, well then <a href="http://sites.fastspring.com/fontprep/product/fontprep" target="_blank" rel="external">go get it</a>. <img alt="fontprep logo" class="fp-logo" src="logo_sec.svg"></p>
+
+<h2 id="all_new_user_interface">All new user interface</h2>
+
+<p>FontPrep has been completely redesigned, with flatness and speed in mind. You can now view fonts from directly within the app, and copy glyphs to your clipboard with ease.</p>
+
+<p><img alt="fontprep UI" src="fontprep_screen.png"></p>
+
+<h2 id="subsetter">Subsetter</h2>
+
+<p>After much demand, we&#8217;re pleased to announce that FontPrep now has a built-in subsetter. FontPrep allows you to take a font with thousands of characters and create a font with 1, 10, 67, 100, or however many glyphs you need. With the subsetter, you can extract a certain character set like Latin or Cyryllic, or you can create your own custom range. Check out a <a href="http://youtu.be/1pv00TVHPDc" target="_blank" rel="external">video demoing the subsetter</a>. <img alt="fontprep UI" src="fontprep_screen_subsetter.png"></p>
+
+<h2 id="enhanced_export_options">Enhanced export options</h2>
+
+<p>Now you can export webfont packs (which consist of custom CSS and just the right font files), custom subsets, TTF files, OTF files, WOFF, EOT, SVG, and CSS. You can also extract all of the glyphs within a font in SVG form, which is great for playing and experimenting with your favorite vector editor, like Adobe Illustrator. Check out <a href="http://youtu.be/IQ20wbsUyhc" target="_blank" rel="external">this video</a>, which demos exporting.</p>
+
+<h2 id="brand_new_inbrowser_viewer">Brand new in-browser viewer</h2>
+
+<p>FontPrep now has a brand new in-browser viewer, allowing you to test and view your fonts in browsers from IE6 all of the way to Chromium. Check out a <a href="http://www.youtube.com/watch?v=evD1J9L2lMQ&amp;list=PL-pAsbCdKJwVe7OzdcEdBJ26ZluqdKiQp" target="_blank" rel="external">demo video here</a>.</p>
+
+<p><img alt="fontprep viewer" src="fontprep_viewer.png"></p>
+
+<h2 id="themes">Themes</h2>
+
+<p>We realize that not everyone likes to rock the same RGBAs on their desktop, so we&#8217;ve created 5 custom themes (with more to come!) for you to show off your personality.</p>
+
+<p><img alt="themes" src="themes.png"></p>
+
+<h2 id="completely_offline">Completely Offline</h2>
+
+<p>Previous versions of FontPrep sent off font files to the cloud for processing, then sent them back to your computer, perfectly and flawlessly behind the scenes. FontPrep v2 removes that middle man, and does all of the processing right on your own machine. So whether you&#8217;re at home with blazingly fast internet, at Starbucks with snail Wifi, or on a plane with no connection, FontPrep is ready for the challenge.</p>
+
+<p><a class="button" href="http://fontprep.com" target="_blank" rel="external">Get Fontprep!</a></p>
+
+<h2 id="demo">Demo</h2><br><iframe allowfullscreen class="demo-video" frameborder="0" height="720" src="http://www.youtube.com/embed/0t4dMoawrBs" width="960"></iframe><br><h2 id="other_videos">Other videos</h2>
+
+<p>View other FontPrep v2 demo videos on <a href="http://www.youtube.com/playlist?list=PL-pAsbCdKJwVe7OzdcEdBJ26ZluqdKiQp" target="_blank" rel="external">this YouTube playlist</a>.</p>
+
+
+    </main>
+
+    <div class="body-border">
+    </div>
+
+    <router-view></router-view>
+
+    <div class="loader"></div>
+
+    <menulink>
+    </menulink>
+
+    <menu>
+    </menu>
+
+    <a v-link="{ path: '/' }" href='/' class="logo">
+      Bg
+    </a>
+
+    <div class="decoration-line"></div>
+
+    <footer>
+      <section class="main">
+        <ul>
+          <li><a href="/posts">Posts</a></li>
+          <li><a href="/github">Github</a></li>
+          <li><a href="https://twitter.com/brianmgonzalez">Twitter</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+
+        <div class="image">
+        </div>
+      </section>
+    </footer>
+
+    
+    <script>
+      window.updateBodyURL = function () {
+        document.getElementsByTagName('body')[0]
+                .setAttribute('data-url', window.location.pathname);
+      }
+      window.updateBodyURL();
+    </script>
+    <script src="/js/app.js"> </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-5991707-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+  </body>
+</html>

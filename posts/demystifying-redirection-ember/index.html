@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Brian Gonzalez | Developer</title>
+    <link rel="stylesheet" href="/css/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/images/favicon.png" sizes="192x192" type="image/png">
+  </head>
+
+  <body id="body" data-url="/">
+
+    <main role="main" id="main">
+        <div id="waves"></div>
+      
+<h1 class="main page-title">
+  <span class="zag">Demystifying Redirection in Ember</span>
+</h1>
+
+<div>
+  <date>
+    Published 05/08/2016
+  </date>
+</div>
+
+<p>As your Ember app becomes more complex with user authentication, tricky redirect rules, error substates, etc., you’ll often find yourself reaching for Ember’s <code>transitionTo</code> method, but this may not always be the right tool for the job.</p>
+<p>Maybe you need to redirect a user away from the login page if they have it bookmarked but are already logged in, or redirect them to the login page if the try to access their account but are authenticated.</p>
+<p>Or perhaps you’re running an A/B test and don’t want users in a certain test to see a certain page.</p>
+<p>What if the user is trying to access the sign-up page and they’re already signed up? We’ll redirect them as well.</p>
+<p>This article will attempt to shed light on the tools you have at your disposal in Ember</p>
+<ul>
+<li><code>transitionTo</code></li>
+<li><code>intermediateTransitionTo</code></li>
+<li><code>replaceWith</code></li>
+<li><code>Transition#retry</code></li>
+</ul>
+<p>Let’s start with this high-level breakdown of each approach, then we’ll walk through a few scenarios where you’d use one over the other.</p>
+<pre><code>
+                             State Management  History Operation   Controller Equivalent
+                             ----------------  -----------------   ---------------------
+transitionTo                 Manual               Push                   transitionToRoute
+replaceWith                  Manual            Replace                replaceRoute
+intermediateTransitionTo     Manual               None                   None
+Transition#retry             Auto               Push                   n/a
+</code></pre><h2 id="Scenario-1-Redirecting-away-from-an-authenticated-page"><a href="#Scenario-1-Redirecting-away-from-an-authenticated-page" class="headerlink" title="Scenario 1 - Redirecting away from an authenticated page"></a>Scenario 1 - Redirecting away from an authenticated page</h2><p>Take an unauthenticated user visiting <code>/account</code>, a route that requires user authentication. The desired UX is to kick them to <code>/login</code>, and once they login, to send them back to the account route:</p>
+<pre><code>// app/routes/account.js
+
+beforeModel(transition) {
+  transition.abort();
+  this.replaceWith(&#39;login&#39;);
+}
+
+// app/routes/login.js
+
+onLoginSuccess() {
+  this.replaceWith(&#39;account&#39;);
+}
+</code></pre><p>The beauty of this approach is that the you don’t break the user’s back button as you send them to log in. If you blindly used <code>transitionTo</code>, the user’s back button would likely break and they’d become trapped. No bueno.</p>
+<h2 id="Scenario-1-API-failure"><a href="#Scenario-1-API-failure" class="headerlink" title="Scenario 1 - API failure"></a>Scenario 1 - API failure</h2><p>Let’s say your API intermittently fails or times out. The desired UX is to show the user some sane error messaging, and perhaps tell them to refresh shortly (or refresh the browser on their behalf). <code>intermediateTransitionTo</code> is the right tool for the job here.</p>
+<pre><code>// app/routes/application.js
+
+ actions: {
+    error(error) {
+      const errors = error.errors || [];
+
+      const isTimedOut = errors.find((e) =&gt; typeof e.detail === &#39;string&#39; &amp;&amp;
+                         e.detail.search(&#39;timed out&#39;) !== -1);
+      const isAPIDown = errors.find((e) =&gt; e.status === 423);
+
+      if (isAPIDown || isTimedOut) {
+        this.intermediateTransitionTo(&#39;application-error&#39;);
+      }
+    },
+  }
+</code></pre><p>Remember, <code>intermediateTransitionTo</code> does not modify the URL or the state of <code>window.history</code>. When the page is refreshed (or programmtically refreshes), the route the user intended to visit is preserved and will be reloaded.</p>
+<h2 id="When-to-use-transitionTo"><a href="#When-to-use-transitionTo" class="headerlink" title="When to use transitionTo"></a>When to use <code>transitionTo</code></h2><p>One mistake I often see young Ember developers make is overusing <code>transitionTo</code>.</p>
+<p>This bit of markup with a corresponding action in one’s route:</p>
+<pre><code>&lt;button \{\{ action &#39;transitionToAccount&#39; \}\}&gt;
+  Take me to my account
+&lt;/button&gt;
+</code></pre><p>…could be written more succinctly (no action!) as:</p>
+<pre><code>{{#link-to 'account' class='button'}}
+  Take me to my account
+{{/link-to}}
+</code></pre><p>So my advice is to use <code>transitionTo</code> when you want your app to behave <em>as if</em> the user had clicked on a link. But, don’t use <code>transitionTo</code> when a simple <code>link-to</code> is more appropriate.</p>
+<p>If you enjoyed this post, follow me on <a href="https://twitter.com/brianmgonzalez" target="_blank" rel="external">Twitter</a> as I’ll be writing more on Ember over the coming months.</p>
+
+
+    </main>
+
+    <div class="body-border">
+    </div>
+
+    <router-view></router-view>
+
+    <div class="loader"></div>
+
+    <menulink>
+    </menulink>
+
+    <menu>
+    </menu>
+
+    <a v-link="{ path: '/' }" href='/' class="logo">
+      Bg
+    </a>
+
+    <div class="decoration-line"></div>
+
+    <footer>
+      <section class="main">
+        <ul>
+          <li><a href="/posts">Posts</a></li>
+          <li><a href="/github">Github</a></li>
+          <li><a href="https://twitter.com/brianmgonzalez">Twitter</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+
+        <div class="image">
+        </div>
+      </section>
+    </footer>
+
+    
+    <script>
+      window.updateBodyURL = function () {
+        document.getElementsByTagName('body')[0]
+                .setAttribute('data-url', window.location.pathname);
+      }
+      window.updateBodyURL();
+    </script>
+    <script src="/js/app.js"> </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-5991707-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+  </body>
+</html>

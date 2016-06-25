@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Brian Gonzalez | Developer</title>
+    <link rel="stylesheet" href="/css/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/images/favicon.png" sizes="192x192" type="image/png">
+  </head>
+
+  <body id="body" data-url="/">
+
+    <main role="main" id="main">
+        <div id="waves"></div>
+      
+<h1 class="main page-title">
+  <span class="zag">FontPrep Google Chrome Extension</span>
+</h1>
+
+<div>
+  <date>
+    Published 06/18/2013
+  </date>
+</div>
+
+<p>We just released a <a href="https://chrome.google.com/webstore/detail/fontprep/lgekjlpbdphfedjhdnebggommhalhake" target="_blank" rel="external">Chrome extension</a> for injecting <a href="http://fontprep.com" target="_blank" rel="external">FontPrep</a> fonts directly into any page.</p>
+
+<p>This is really useful because it allows you to inject a font and inspect how it looks on a page without needing to code <em>all of the fonts</em> and <em>all of the CSS</em> into the page.</p>
+
+<p>Before we start, make sure you have <a href="http://fontprep.com" target="_blank" rel="external">FontPrep</a> installed and have the <a href="https://chrome.google.com/webstore/detail/fontprep/lgekjlpbdphfedjhdnebggommhalhake" target="_blank" rel="external">extension</a> downloaded. Here&#8217;s a quick run-down on exactly how to use it.</p>
+
+<h2 id="step_1_copy_the_fonts_id">Step 1: Copy the font&#8217;s ID</h2>
+
+<p>First off, click on the name of the font to copy that font&#8217;s ID to the clipboard. You&#8217;ll be plugging this ID into the Chrome extension.</p>
+
+<p><img alt="copy id" src="fontprep-extension-1.png"></p>
+
+<h2 id="step_2_paste_in_the_id_and_insert_css_selector">Step 2: Paste in the ID and insert CSS selector</h2>
+
+<p>Next, click on the extension&#8217;s icon and paste in the font id and select which elements you&#8217;d like to apply the font to. You can use any valid CSS selector.</p>
+
+<p><img alt="copy id" src="fontprep-extension-2.png"></p>
+
+<h2 id="step_3_apply_font_and_styles">Step 3: Apply font and styles</h2>
+
+<p>Lastly, click apply and then low and behold, your font is applied to the given elements in the page.</p>
+
+<p><img alt="copy id" src="fontprep-extension-3.png"></p>
+
+<p>We&#8217;ll be looking to extend the functionality of the extension over time. Hit me up on Twitter me with feature requests or any questions you may have.</p>
+
+<p><a class="button" href="https://chrome.google.com/webstore/detail/fontprep/lgekjlpbdphfedjhdnebggommhalhake" target="_blank" rel="external">Download extension</a></p>
+
+
+    </main>
+
+    <div class="body-border">
+    </div>
+
+    <router-view></router-view>
+
+    <div class="loader"></div>
+
+    <menulink>
+    </menulink>
+
+    <menu>
+    </menu>
+
+    <a v-link="{ path: '/' }" href='/' class="logo">
+      Bg
+    </a>
+
+    <div class="decoration-line"></div>
+
+    <footer>
+      <section class="main">
+        <ul>
+          <li><a href="/posts">Posts</a></li>
+          <li><a href="/github">Github</a></li>
+          <li><a href="https://twitter.com/brianmgonzalez">Twitter</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+
+        <div class="image">
+        </div>
+      </section>
+    </footer>
+
+    
+    <script>
+      window.updateBodyURL = function () {
+        document.getElementsByTagName('body')[0]
+                .setAttribute('data-url', window.location.pathname);
+      }
+      window.updateBodyURL();
+    </script>
+    <script src="/js/app.js"> </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-5991707-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+  </body>
+</html>

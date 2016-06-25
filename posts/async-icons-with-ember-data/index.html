@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Brian Gonzalez | Developer</title>
+    <link rel="stylesheet" href="/css/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/images/favicon.png" sizes="192x192" type="image/png">
+  </head>
+
+  <body id="body" data-url="/">
+
+    <main role="main" id="main">
+        <div id="waves"></div>
+      
+<h1 class="main page-title">
+  <span class="zag">Async SVG icons with ember-data</span>
+</h1>
+
+<div>
+  <date>
+    Published 09/11/2014
+  </date>
+</div>
+
+<p>One of the things I love most about Ember is its use of promises to paint the user interface asynchronously and fill in the data within Handlebars templates. You can inject variables into your Handlebars templates that are the result of asynchronous calls, and, if you couple that with ember-data, you get some really cool stuff out of the box.  </p>
+<h2 id="Outline"><a href="#Outline" class="headerlink" title="Outline"></a>Outline</h2><p>In this post I’ll outline how to</p>
+<ul>
+<li>use gulp to create an SVG sprite file — <code>icon-sprite.json</code></li>
+<li>create an ember-data model based off of our icon sprite</li>
+<li>create a component used to inject icons throughout our app</li>
+<li>use CSS to style said icons</li>
+</ul>
+<p><em>Quick note</em>: In <a href="#">my last post</a>, I outlined how to use gulp + <a href="https://github.com/briangonzalez/gulp-file-contents-to-json" target="_blank" rel="external">gulp-file-contents-to-json</a> to grab some files, read in their contents, and output a JSON blob. I recommend reading that post before continuing.</p>
+<h2 id="What-is-SVG-spriting"><a href="#What-is-SVG-spriting" class="headerlink" title="What is SVG spriting?"></a>What is SVG spriting?</h2><p>Instead of injecting a bunch of little <code>&lt;img src=&#39;my-icon.svg&#39;&gt;</code> throughout your app, the basic idea is that we’ll make <em>one single request</em> for our SVG sprite, and use the data within that sprite to paint our UI. This saves a ton of overhead by not making too many HTTP requests.</p>
+<p>Ok, basics covered.</p>
+<h2 id="Creating-the-icon-sprite"><a href="#Creating-the-icon-sprite" class="headerlink" title="Creating the icon sprite"></a>Creating the icon sprite</h2><p>The first step is to create a folder containing our SVG icons.</p>
+<p>The next step is to create a gulp task called <code>create-icon-sprite</code> inside <code>gulpfile.js</code> to read in our SVG files, and output them to some destination. Something like this should work:</p>
+<pre><code>var gulp    = require(&#39;gulp&#39;);
+var fc2json = require(&#39;gulp-file-contents-to-json&#39;);
+
+gulp.task(&#39;create-icon-sprite&#39;, function() {
+  gulp.src(&#39;icons/**/*.svg&#39;)
+      .pipe(fc2json(&#39;icon-sprite.json&#39;))
+      .pipe(gulp.dest(&#39;./dist/&#39;));
+});
+</code></pre><p>This task recursively globs SVG files in the <code>icons</code> directory, and creates <code>dist/icon-sprite.json</code>. The filename becomes the key and the contents are the value.</p>
+<p>The next step is to simply run:</p>
+<pre><code>$ gulp create-icon-sprite
+</code></pre><h2 id="Sprite-payload-ember-data"><a href="#Sprite-payload-ember-data" class="headerlink" title="Sprite payload + ember-data"></a>Sprite payload + ember-data</h2><p>Due to Ember’s intelligent, convention-over-configuration naming schemes, an ember-data model will always use its like-named adapter/serializer, if available. So an <code>Icon</code> model uses the <code>IconAdapter</code>, and the <code>IconAdapter</code> uses the <code>IconSerializer</code>. Perfect harmony.</p>
+<p>First, we’ll define our model:</p>
+<pre><code>App.Icon = DS.Model.extend({ data: DS.attr() });
+</code></pre><p>Second, we’ll build out the adapter. The adapter is essentially what makes the AJAX request on our behalf when we call <code>this.store.findAll(&#39;icon&#39;)</code>:</p>
+<pre><code>var SPRITE_URL = &#39;/dist/icon-sprite.json&#39;;
+
+App.IconAdapter = DS.Adapter.extend({
+
+  findAll: function(store, type, sinceToken) {
+    return $.ajax({
+      dataType: &quot;json&quot;,
+      url: this.buildURL(type.typeKey),
+    });
+  },
+
+  buildURL: function() {
+    return SPRITE_URL;
+  }
+
+});
+</code></pre><p>Next, we’ll create our custom serializer, since we’ll need to write our own <a href="http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_normalizePayload" target="_blank" rel="external">normalizePayload</a> method. In our <code>normalizePayload</code> method, we’re passed <code>payload</code>, which we munge, and pass to the <code>_super</code> method. Here, we’re setting the name of the file to the model’s ID and the SVG contents to the model’s <code>data</code> property.</p>
+<pre><code>App.IconSerializer = DS.RESTSerializer.extend({
+  normalizePayload: function(payload) {
+
+    var icons = [];
+
+    for ( var icon in payload ) {
+      icons.push({
+        id:   icon.replace(&#39;.svg&#39;, &#39;&#39;),
+        data:  payload[icon]
+      });
+    }
+
+    return this._super({ icons: icons });
+  }
+});
+</code></pre><h2 id="Requesting-the-icon-sprite"><a href="#Requesting-the-icon-sprite" class="headerlink" title="Requesting the icon sprite"></a>Requesting the icon sprite</h2><p>The next step is to kick off the request of our icon sprite.</p>
+<p>I like to request my icon sprite in a non-blocking Ember initializer. This ensures my icon sprite is ready as soon as possible.</p>
+<pre><code>App.initializer({
+  name: &#39;icons&#39;,
+  initialize: function (container, application) {
+    application.inject(&#39;component&#39;, &#39;store&#39;, &#39;store:main&#39;);
+    container.lookup(&#39;store:main&#39;).findAll(&#39;icon&#39;);
+  }
+});
+</code></pre><h2 id="Creating-the-AppIcon-component"><a href="#Creating-the-AppIcon-component" class="headerlink" title="Creating the AppIcon component"></a>Creating the <code>AppIcon</code> component</h2><p>Here’s what our <code>AppIcon</code> component looks like. Nothing too fancy.</p>
+<pre><code>App.AppIconComponent = Ember.Component.extend({
+  tagName: &#39;i&#39;,
+  attributeBindings:[ &#39;name:data-icon&#39; ],  
+  icons: function () {
+    var self = this;
+    var store = this.get(&#39;targetObject.store&#39;);
+
+    return store.filter(&#39;icon&#39;, function (record) {
+      return (record.get(&#39;id&#39;) === self.get(&#39;name&#39;));
+    });
+
+  }.property()
+});
+</code></pre><p>And here’s the corresponding template:</p>
+<pre><code>&lt;script type=&quot;text/x-handlebars&quot; data-template-name=&quot;components/app-icon&quot;&gt;
+  {{#each icon in icons}}
+    {{{ unbound icon.data }}}
+  {{/each}}
+&lt;/script&gt;
+</code></pre><p>Now, throughout your Handlebars templates, including an icon is as simple as:</p>
+<pre><code>&lt;h1&gt;
+  Look at this Twitter icon!
+  {{ app-icon name='twitter' }}
+&lt;/h1&gt;
+</code></pre><h2 id="Styling-our-icons-with-CSS"><a href="#Styling-our-icons-with-CSS" class="headerlink" title="Styling our icons with CSS"></a>Styling our icons with CSS</h2><p>Next, we’ll style our icons like so. The beauty of this approach is that not only does it allow us to ‘color’ our icons, but it also allows use to color the inner elements of the icons as well. This, in my opinion, is the main advantage of this approach over the approach outlined here: <a href="http://css-tricks.com/svg-sprites-use-better-icon-fonts/" target="_blank" rel="external">Icon System with SVG sprites</a>.</p>
+<pre><code>[data-icon] svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+
+[data-icon=&quot;twitter&quot;] svg {
+  fill: blue;  
+}
+
+[data-icon=&quot;github&quot;] svg {
+  fill: red;
+
+  /* Styling an inner element. */
+  .octocat { fill: pink }
+}
+
+[data-icon=&quot;dribbble&quot;] svg {
+  fill: green;
+}
+</code></pre><h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p>You can find the icon sprite repo <a href="https://github.com/briangonzalez/blog-async-svg-icons-with-ember-data" target="_blank" rel="external">here</a>.</p>
+
+
+    </main>
+
+    <div class="body-border">
+    </div>
+
+    <router-view></router-view>
+
+    <div class="loader"></div>
+
+    <menulink>
+    </menulink>
+
+    <menu>
+    </menu>
+
+    <a v-link="{ path: '/' }" href='/' class="logo">
+      Bg
+    </a>
+
+    <div class="decoration-line"></div>
+
+    <footer>
+      <section class="main">
+        <ul>
+          <li><a href="/posts">Posts</a></li>
+          <li><a href="/github">Github</a></li>
+          <li><a href="https://twitter.com/brianmgonzalez">Twitter</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+
+        <div class="image">
+        </div>
+      </section>
+    </footer>
+
+    
+    <script>
+      window.updateBodyURL = function () {
+        document.getElementsByTagName('body')[0]
+                .setAttribute('data-url', window.location.pathname);
+      }
+      window.updateBodyURL();
+    </script>
+    <script src="/js/app.js"> </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-5991707-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Brian Gonzalez | Developer</title>
+    <link rel="stylesheet" href="/css/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/images/favicon.png" sizes="192x192" type="image/png">
+  </head>
+
+  <body id="body" data-url="/">
+
+    <main role="main" id="main">
+        <div id="waves"></div>
+      
+<h1 class="main page-title">
+  <span class="zag">A PolyFill for WebSockets</span>
+</h1>
+
+<div>
+  <date>
+    Published 02/25/2013
+  </date>
+</div>
+
+<p>IE9 and below require the use of a Flash-based polyfill. I&#8217;ve had good luck with <a href="https://github.com/gimite/web-socket-js" target="_blank" rel="external">web-socket-js</a>.</p>
+
+<p>The main &#8220;gotcha&#8221; involved with the Flash fallback included in <a href="https://github.com/gimite/web-socket-js" target="_blank" rel="external">web-socket-js</a> is the <em>Flash socket policy file</em>, which is outlined <a href="http://www.lightsphere.com/dev/articles/flash_socket_policy.html" target="_blank" rel="external">here</a>. Basically, for security, socket connections in Flash require a policy XML file hosted on port <strong>843</strong> of the same location the websockets server is running. It should return the following:</p>
+
+<pre><code>&lt;cross-domain-policy&gt;&#x000A;  &lt;allow-access-from domain=&quot;*&quot; to-ports=&quot;*&quot; /&gt;&#x000A;&lt;/cross-domain-policy&gt;</code></pre>
+
+<p>So, for instance, if you&#8217;re WebSockets server is running on <code>localhost:1234</code>, you&#8217;ll need a policy server running on <code>localhost:843</code>. Here&#8217;s a simple Ruby Flash Socket Policy Server (which should only be used for testing locally).</p>
+
+<h2 id="a_simple_flash_socket_policy_server">A simple Flash Socket Policy Server</h2>
+
+<p>Place the following in a file called <code>flash_socket_policy_server.rb</code>:</p>
+
+<pre class="ruby"><code>require &quot;socket&quot;&#x000A;&#x000A;puts &quot;Starting policy server...&quot;&#x000A;&#x000A;webserver = TCPServer.new(nil, 843)&#x000A;while (session = webserver.accept)&#x000A;  session.print(&#39;&lt;cross-domain-policy&gt;&lt;allow-access-from domain=&quot;*&quot; to-ports=&quot;*&quot; /&gt;&lt;/cross-domain-policy&gt;&#39;)&#x000A;  session.close&#x000A;end</code></pre>
+
+<p>Then fire it up like so:</p>
+
+<pre class="bash"><code>sudo ruby flash_socket_policy_server.rb</code></pre>
+
+<p><strong>Note</strong> the <code>sudo</code> command, which is needed because port <code>843</code> is so low.</p>
+
+
+    </main>
+
+    <div class="body-border">
+    </div>
+
+    <router-view></router-view>
+
+    <div class="loader"></div>
+
+    <menulink>
+    </menulink>
+
+    <menu>
+    </menu>
+
+    <a v-link="{ path: '/' }" href='/' class="logo">
+      Bg
+    </a>
+
+    <div class="decoration-line"></div>
+
+    <footer>
+      <section class="main">
+        <ul>
+          <li><a href="/posts">Posts</a></li>
+          <li><a href="/github">Github</a></li>
+          <li><a href="https://twitter.com/brianmgonzalez">Twitter</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+
+        <div class="image">
+        </div>
+      </section>
+    </footer>
+
+    
+    <script>
+      window.updateBodyURL = function () {
+        document.getElementsByTagName('body')[0]
+                .setAttribute('data-url', window.location.pathname);
+      }
+      window.updateBodyURL();
+    </script>
+    <script src="/js/app.js"> </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-5991707-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+  </body>
+</html>

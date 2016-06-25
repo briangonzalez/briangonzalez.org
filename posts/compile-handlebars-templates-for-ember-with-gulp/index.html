@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Brian Gonzalez | Developer</title>
+    <link rel="stylesheet" href="/css/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/images/favicon.png" sizes="192x192" type="image/png">
+  </head>
+
+  <body id="body" data-url="/">
+
+    <main role="main" id="main">
+        <div id="waves"></div>
+      
+<h1 class="main page-title">
+  <span class="zag">Compile Handlebars templates for Ember with Gulp</span>
+</h1>
+
+<div>
+  <date>
+    Published 11/03/2014
+  </date>
+</div>
+
+<p>At work, we try to keep <a href="http://dollarshaveclub.com" target="_blank" rel="external">dollarshaveclub.com</a> tracking with the latest Ember/Ember Data <a href="http://emberjs.com/builds/#/beta" target="_blank" rel="external">beta</a> or <a href="http://emberjs.com/builds/#/canary" target="_blank" rel="external">canary</a> builds. With the <a href="http://emberjs.com/blog/2014/10/26/ember-1-8-0-released.html" target="_blank" rel="external">release of Ember 1.9 beta</a>, Handlebars 2.0.0 is now a requirement. This meant that our gulp build tasks needed to be rewritten to target Handlebars 2.0.0.</p>
+<h2 id="Setting-up-the-gulp-task"><a href="#Setting-up-the-gulp-task" class="headerlink" title="Setting up the gulp task"></a>Setting up the gulp task</h2><p>The first step in creating our handlebars compilation task is to install our dependencies and add them to <code>package.json</code>.</p>
+<pre><code>$ npm install --save-dev gulp gulp-concat gulp-streamify gulp-declare gulp-wrap gulp-tap ember-template-compiler
+</code></pre><p>Then add them to the top of our <code>gulpfile.js</code>:</p>
+<pre><code>var gulp        = require(&#39;gulp&#39;);
+var concat      = require(&#39;gulp-concat&#39;);
+var streamify   = require(&#39;gulp-streamify&#39;);
+var declare     = require(&#39;gulp-declare&#39;);
+var wrap        = require(&#39;gulp-wrap&#39;);
+var tap         = require(&#39;gulp-tap&#39;);
+var compiler    = require(&#39;ember-template-compiler&#39;);
+</code></pre><p>Next, we’ll define the folder in which our templates live:</p>
+<pre><code>var TEMPLATE_DIR = &#39;templates&#39;;
+</code></pre><h2 id="Building-up-the-gulp-task"><a href="#Building-up-the-gulp-task" class="headerlink" title="Building up the gulp task"></a>Building up the gulp task</h2><p>From a high level, the meat of our task will perform the following:</p>
+<pre><code>gulp.task(&#39;compile-handlebars&#39;, function(){
+  // 1 - Read in our hbs files recursively
+  // 2 - Precompile the templates using ember-template-compiler
+  // 3 - Wrap output in Ember.Handlebars.template
+  // 4 - Create Ember.TEMPLATES namespace to house our precompiled templates
+  // 5 - Concatenate and output.
+});
+</code></pre><h2 id="The-finished-product"><a href="#The-finished-product" class="headerlink" title="The finished product"></a>The finished product</h2><p>You can see the finished product below. Checkout a <a href="https://github.com/briangonzalez/blog-compile-handlebars-templates-ember-with-gulp" target="_blank" rel="external">working repository</a> and give it a try for yourself.</p>
+<pre><code>var gulp        = require(&#39;gulp&#39;);
+var concat      = require(&#39;gulp-concat&#39;);
+var streamify   = require(&#39;gulp-streamify&#39;);
+var declare     = require(&#39;gulp-declare&#39;);
+var wrap        = require(&#39;gulp-wrap&#39;);
+var tap         = require(&#39;gulp-tap&#39;);
+var compiler    = require(&#39;ember-template-compiler&#39;);
+
+var TEMPLATE_DIR = &#39;templates&#39;;
+
+gulp.task(&#39;compile-handlebars&#39;, function(){
+
+  // First - Grab all of the templates nested within our ./templates dir.
+  return gulp.src(templateDir + &#39;/**/*.hbs&#39;)
+
+    // Second - Tap into the stream of files, compiling the template.
+    // The second argument (false) of precompile says return a string
+    // and not a function.
+    .pipe(tap(function(file, t) {
+      var compiled = compiler.precompile(file.contents.toString(), false);
+      file.contents = new Buffer(compiled);
+    }))
+
+    // Third - Since the tap step above output a string, we need to make
+    // sure we wrap the output in the Ember.Handlebars.template function.
+    .pipe(wrap(&#39;Ember.Handlebars.template(&lt;%= contents %&gt;)&#39;))
+
+    // Fourth - Create an Ember.TEMPLATES object and attach it to the window.
+    .pipe(declare({
+      namespace: &#39;Ember.TEMPLATES&#39;,
+      root: &#39;window&#39;,
+      processName: function(filePath) {
+        var id = filePath.split(templateDir + &#39;/&#39;)[1].replace(&#39;.hbs&#39;, &#39;&#39;);
+        return id;
+      }
+    }))
+
+    // Fifth - Concatenate the templates and output to build dir.
+    .pipe(concat(&#39;templates.js&#39;))
+    .pipe(gulp.dest(&#39;./build&#39;));
+
+});
+</code></pre><p>Find the code <a href="https://github.com/briangonzalez/blog-compile-handlebars-templates-ember-with-gulp" target="_blank" rel="external">on Github</a>.</p>
+
+
+    </main>
+
+    <div class="body-border">
+    </div>
+
+    <router-view></router-view>
+
+    <div class="loader"></div>
+
+    <menulink>
+    </menulink>
+
+    <menu>
+    </menu>
+
+    <a v-link="{ path: '/' }" href='/' class="logo">
+      Bg
+    </a>
+
+    <div class="decoration-line"></div>
+
+    <footer>
+      <section class="main">
+        <ul>
+          <li><a href="/posts">Posts</a></li>
+          <li><a href="/github">Github</a></li>
+          <li><a href="https://twitter.com/brianmgonzalez">Twitter</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+
+        <div class="image">
+        </div>
+      </section>
+    </footer>
+
+    
+    <script>
+      window.updateBodyURL = function () {
+        document.getElementsByTagName('body')[0]
+                .setAttribute('data-url', window.location.pathname);
+      }
+      window.updateBodyURL();
+    </script>
+    <script src="/js/app.js"> </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-5991707-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+  </body>
+</html>

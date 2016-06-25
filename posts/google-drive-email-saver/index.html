@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Brian Gonzalez | Developer</title>
+    <link rel="stylesheet" href="/css/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/images/favicon.png" sizes="192x192" type="image/png">
+  </head>
+
+  <body id="body" data-url="/">
+
+    <main role="main" id="main">
+        <div id="waves"></div>
+      
+<h1 class="main page-title">
+  <span class="zag">Google Drive + Ruby</span>
+</h1>
+
+<div>
+  <date>
+    Published 08/06/2013
+  </date>
+</div>
+
+<p>Whenever it comes time for me to build a landing page or something similar where I am going to capture email addresses, I always survey the landscape for what&#8217;s currently out there. I am typically never happy with what I find.</p>
+
+<p>There&#8217;s <a href="http://wufoo.com" target="_blank" rel="external">Wufoo</a>, <a href="http://formstack.com" target="_blank" rel="external">Formstack</a>, or even <a href="https://docs.google.com/forms/create" target="_blank" rel="external">Google Forms</a> &#8211; but each of these solutions requires embedding one of their forms into your page. This means a loss of control over styling and functionality, and it also means you&#8217;ll likely end up with their branding all over your page.</p>
+
+<p>I recently began building a landing page for <a href="http://ncmcivil.com" target="_blank" rel="external">NCM Engineering Corporation</a>, and I devised a solution for saving email addresses straight to Google Drive. It&#8217;s called <a href="https://github.com/briangonzalez/google-drive-email-saver" target="_blank" rel="external">google-drive-email-saver</a>, and it relies heavily on a Ruby gem called <a href="https://github.com/gimite/google-drive-ruby" target="_blank" rel="external">google-drive-ruby</a> which is a very robust and powerful way to programmatically interact with Google Drive.</p>
+
+<h2 id="how_to_use">How to use</h2>
+
+<p>Here&#8217;s a small snippet which shows just how easy it is to write an email address to a spreadsheet in Google Drive.</p>
+
+<pre class="ruby"><code>require &#39;./google-drive-email-saver.rb&#39;&#x000A;&#x000A;# where 8675309abcdef is the spreadsheet key&#x000A;g = GoogleDriveEmailSaver.new(&#39;me@gmail.com&#39;, &#39;passwd123456&#39;, &#39;8675309abcdef&#39;) &#x000A;g.save_email(&#39;person.who@justsignedup.com&#39;)</code></pre>
+
+<p>Once you&#8217;re done capturing email addresses, it&#8217;s incredibly easy to export all of them to a CSV file from the Google Drive interface.</p>
+
+<h2 id="demo">Demo</h2>
+
+<p><img alt="demo-concealed" class="scale" src="google-drive-email-saver.gif"></p>
+
+<h2 id="questions">Questions?</h2>
+
+<p>Feel free to contact me <a href="http://twitter.com/brianmgonzalez" target="_blank" rel="external">@brianmgonzalez</a></p>
+
+<p><a class="button" href="https://github.com/briangonzalez/google-drive-email-saver" target="_blank" rel="external">Code on Github</a></p>
+
+
+    </main>
+
+    <div class="body-border">
+    </div>
+
+    <router-view></router-view>
+
+    <div class="loader"></div>
+
+    <menulink>
+    </menulink>
+
+    <menu>
+    </menu>
+
+    <a v-link="{ path: '/' }" href='/' class="logo">
+      Bg
+    </a>
+
+    <div class="decoration-line"></div>
+
+    <footer>
+      <section class="main">
+        <ul>
+          <li><a href="/posts">Posts</a></li>
+          <li><a href="/github">Github</a></li>
+          <li><a href="https://twitter.com/brianmgonzalez">Twitter</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+
+        <div class="image">
+        </div>
+      </section>
+    </footer>
+
+    
+    <script>
+      window.updateBodyURL = function () {
+        document.getElementsByTagName('body')[0]
+                .setAttribute('data-url', window.location.pathname);
+      }
+      window.updateBodyURL();
+    </script>
+    <script src="/js/app.js"> </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-5991707-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+  </body>
+</html>
