@@ -1,7 +1,7 @@
 
 <template>
   <ul class="github-repos">
-    <li v-for="repo of state.github.topRepos">
+    <li v-for="repo of topRepos">
       <a href="{{repo.html_url}}">
         <h2>{{ repo.name }}</h2>
         <small>{{ repo.stargazers_count }} stars / {{ repo.forks }} forks</small>
@@ -11,26 +11,27 @@
 </template>
 
 <script>
-  import store from '../store';
+  const fetchTopGithubRepos = function ({ dispatch, state }, page) {
+    dispatch('FETCH_TOP_GITHUB_REPOS', page);
+  };
 
   export default {
-    data () {
-      return {
-        state: store.state
+    vuex: {
+      getters: {
+        topRepos(state) {
+          return state.github.topRepos;
+        }
+      },
+      actions: {
+        fetchTopGithubRepos
       }
     },
-    created: () => {
-
+    created() {
       [1,2,3,4,5].forEach((i) => {
-        store.fetchTopGithubRepos(i)
+        this.fetchTopGithubRepos(i);
       });
-
     },
-    methods: {
-    },
-    components: {
-    }
-  }
+  };
 </script>
 
 <style>

@@ -79,13 +79,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_highlight2.default.configure({});
-	// (function () {
-	//   require('particles.js');
-	//   particlesJS.load('body', '/js/particlesjs-config.json', function() {
-	//     console.log('callback - particles.js config loaded');
-	//   });
-	// })();
-
 	_highlight2.default.initHighlightingOnLoad();
 	window.hljs = _highlight2.default;
 
@@ -98,6 +91,7 @@
 	//
 	var App = _vue2.default.extend({
 	  components: components,
+	  store: _store2.default,
 	  el: function el() {
 	    return 'body';
 	  },
@@ -173,7 +167,7 @@
 	    transition.next(); // Default action for already loaded content.
 	  }
 
-	  _store2.default.emit('hideMenu');
+	  // store.emit('hideMenu');
 	  window.updateBodyURL();
 	  window.scrollTo(0, 0);
 	});
@@ -6078,334 +6072,737 @@
 
 	var _vue2 = _interopRequireDefault(_vue);
 
-	var _events = __webpack_require__(6);
+	var _vuex = __webpack_require__(6);
+
+	var _vuex2 = _interopRequireDefault(_vuex);
 
 	__webpack_require__(7);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var store = new _events.EventEmitter();
+	// Make vue aware of Vuex
+	_vue2.default.use(_vuex2.default);
 
-	store.state = {};
-	store.state.github = {};
-	store.state.github.repos = [];
-	store.state.github.topRepos = [];
+	// Create an object to hold the initial state when
+	// the app starts up
+	var state = {};
+	state.menuShown = false;
+	state.github = {};
+	state.github.repos = [];
+	state.github.topRepos = [];
 
-	store.on('toggleMenu', function () {
-	  _vue2.default.set(this.state, 'menuShown', !this.state.menuShown);
-	});
+	// Create an object storing various mutations. We will write the mutation
+	var mutations = {
+	  TOGGLE_MENU: function TOGGLE_MENU(state) {
+	    state.menuShown = !state.menuShown;
+	  },
+	  FETCH_TOP_GITHUB_REPOS: function FETCH_TOP_GITHUB_REPOS(state, page) {
+	    fetch('https://api.github.com/users/briangonzalez/repos?page=' + page).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      var repos = json.filter(function (r) {
+	        return r.stargazers_count > 90;
+	      });
 
-	store.on('hideMenu', function () {
-	  _vue2.default.set(this.state, 'menuShown', false);
-	});
+	      var uniqueArray = function uniqueArray(arrArg) {
+	        return arrArg.filter(function (elem, pos, arr) {
+	          return arr.indexOf(elem) === pos;
+	        });
+	      };
+
+	      repos = uniqueArray(repos.concat(state.github.topRepos));
+	      repos = repos.sort(function (a, b) {
+	        return a.stargazers_count < b.stargazers_count;
+	      });
+
+	      state.github.topRepos = repos;
+	    }).catch(function (ex) {
+	      state.github.topRepos = [{ name: 'Error.' }];
+	      console.log('parsing failed', ex);
+	    });
+	  }
+	};
 
 	document.addEventListener('keydown', function (event) {
 	  if (event.which === 27) {
-	    _vue2.default.set(store.state, 'menuShown', false);
+	    mutations.TOGGLE_MENU(state);
 	  }
 	});
 
-	store.fetchTopGithubRepos = function (page) {
-	  fetch('https://api.github.com/users/briangonzalez/repos?page=' + page).then(function (response) {
-	    return response.json();
-	  }).then(function (json) {
-	    var repos = json.filter(function (r) {
-	      return r.stargazers_count > 90;
-	    });
-
-	    var uniqueArray = function uniqueArray(arrArg) {
-	      return arrArg.filter(function (elem, pos, arr) {
-	        return arr.indexOf(elem) === pos;
-	      });
-	    };
-
-	    repos = uniqueArray(repos.concat(store.state.github.topRepos));
-	    repos = repos.sort(function (a, b) {
-	      return a.stargazers_count < b.stargazers_count;
-	    });
-
-	    store.state.github.topRepos = repos;
-	  }).catch(function (ex) {
-	    store.state.github.topRepos = [{ name: 'Error.' }];
-	    console.log('parsing failed', ex);
-	  });
-	};
-
-	exports.default = store;
+	// Combine the initial state and the mutations to create a Vuex store.
+	// This store can be linked to our app.
+	exports.default = new _vuex2.default.Store({
+	  state: state,
+	  mutations: mutations
+	});
 
 /***/ },
 /* 6 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-	// Copyright Joyent, Inc. and other Node contributors.
-	//
-	// Permission is hereby granted, free of charge, to any person obtaining a
-	// copy of this software and associated documentation files (the
-	// "Software"), to deal in the Software without restriction, including
-	// without limitation the rights to use, copy, modify, merge, publish,
-	// distribute, sublicense, and/or sell copies of the Software, and to permit
-	// persons to whom the Software is furnished to do so, subject to the
-	// following conditions:
-	//
-	// The above copyright notice and this permission notice shall be included
-	// in all copies or substantial portions of the Software.
-	//
-	// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-	// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-	// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-	// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-	// USE OR OTHER DEALINGS IN THE SOFTWARE.
+	/*!
+	 * Vuex v1.0.0-rc.2
+	 * (c) 2016 Evan You
+	 * Released under the MIT License.
+	 */
+	(function (global, factory) {
+	  ( false ? 'undefined' : _typeof2(exports)) === 'object' && typeof module !== 'undefined' ? module.exports = factory() :  true ? !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : global.Vuex = factory();
+	})(undefined, function () {
+	  'use strict';
 
-	function EventEmitter() {
-	  this._events = this._events || {};
-	  this._maxListeners = this._maxListeners || undefined;
-	}
-	module.exports = EventEmitter;
+	  var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+	    return typeof obj === 'undefined' ? 'undefined' : _typeof2(obj);
+	  } : function (obj) {
+	    return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj === 'undefined' ? 'undefined' : _typeof2(obj);
+	  };
 
-	// Backwards-compat with node 0.10.x
-	EventEmitter.EventEmitter = EventEmitter;
+	  var classCallCheck = function classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	      throw new TypeError("Cannot call a class as a function");
+	    }
+	  };
 
-	EventEmitter.prototype._events = undefined;
-	EventEmitter.prototype._maxListeners = undefined;
-
-	// By default EventEmitters will print a warning if more than 10 listeners are
-	// added to it. This is a useful default which helps finding memory leaks.
-	EventEmitter.defaultMaxListeners = 10;
-
-	// Obviously not all Emitters should be limited to 10. This function allows
-	// that to be increased. Set to zero for unlimited.
-	EventEmitter.prototype.setMaxListeners = function (n) {
-	  if (!isNumber(n) || n < 0 || isNaN(n)) throw TypeError('n must be a positive number');
-	  this._maxListeners = n;
-	  return this;
-	};
-
-	EventEmitter.prototype.emit = function (type) {
-	  var er, handler, len, args, i, listeners;
-
-	  if (!this._events) this._events = {};
-
-	  // If there is no 'error' event listener then throw.
-	  if (type === 'error') {
-	    if (!this._events.error || isObject(this._events.error) && !this._events.error.length) {
-	      er = arguments[1];
-	      if (er instanceof Error) {
-	        throw er; // Unhandled 'error' event
+	  var createClass = function () {
+	    function defineProperties(target, props) {
+	      for (var i = 0; i < props.length; i++) {
+	        var descriptor = props[i];
+	        descriptor.enumerable = descriptor.enumerable || false;
+	        descriptor.configurable = true;
+	        if ("value" in descriptor) descriptor.writable = true;
+	        Object.defineProperty(target, descriptor.key, descriptor);
 	      }
-	      throw TypeError('Uncaught, unspecified "error" event.');
 	    }
-	  }
 
-	  handler = this._events[type];
+	    return function (Constructor, protoProps, staticProps) {
+	      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+	      if (staticProps) defineProperties(Constructor, staticProps);
+	      return Constructor;
+	    };
+	  }();
 
-	  if (isUndefined(handler)) return false;
-
-	  if (isFunction(handler)) {
-	    switch (arguments.length) {
-	      // fast cases
-	      case 1:
-	        handler.call(this);
-	        break;
-	      case 2:
-	        handler.call(this, arguments[1]);
-	        break;
-	      case 3:
-	        handler.call(this, arguments[1], arguments[2]);
-	        break;
-	      // slower
-	      default:
-	        args = Array.prototype.slice.call(arguments, 1);
-	        handler.apply(this, args);
-	    }
-	  } else if (isObject(handler)) {
-	    args = Array.prototype.slice.call(arguments, 1);
-	    listeners = handler.slice();
-	    len = listeners.length;
-	    for (i = 0; i < len; i++) {
-	      listeners[i].apply(this, args);
-	    }
-	  }
-
-	  return true;
-	};
-
-	EventEmitter.prototype.addListener = function (type, listener) {
-	  var m;
-
-	  if (!isFunction(listener)) throw TypeError('listener must be a function');
-
-	  if (!this._events) this._events = {};
-
-	  // To avoid recursion in the case that type === "newListener"! Before
-	  // adding it to the listeners, first emit "newListener".
-	  if (this._events.newListener) this.emit('newListener', type, isFunction(listener.listener) ? listener.listener : listener);
-
-	  if (!this._events[type])
-	    // Optimize the case of one listener. Don't need the extra array object.
-	    this._events[type] = listener;else if (isObject(this._events[type]))
-	    // If we've already got an array, just append.
-	    this._events[type].push(listener);else
-	    // Adding the second element, need to change to array.
-	    this._events[type] = [this._events[type], listener];
-
-	  // Check for listener leak
-	  if (isObject(this._events[type]) && !this._events[type].warned) {
-	    if (!isUndefined(this._maxListeners)) {
-	      m = this._maxListeners;
+	  var toConsumableArray = function toConsumableArray(arr) {
+	    if (Array.isArray(arr)) {
+	      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+	        arr2[i] = arr[i];
+	      }return arr2;
 	    } else {
-	      m = EventEmitter.defaultMaxListeners;
+	      return Array.from(arr);
 	    }
+	  };
 
-	    if (m && m > 0 && this._events[type].length > m) {
-	      this._events[type].warned = true;
-	      console.error('(node) warning: possible EventEmitter memory ' + 'leak detected. %d listeners added. ' + 'Use emitter.setMaxListeners() to increase limit.', this._events[type].length);
-	      if (typeof console.trace === 'function') {
-	        // not supported in IE 10
-	        console.trace();
-	      }
-	    }
+	  /**
+	   * Merge an array of objects into one.
+	   *
+	   * @param {Array<Object>} arr
+	   * @return {Object}
+	   */
+
+	  function mergeObjects(arr) {
+	    return arr.reduce(function (prev, obj) {
+	      Object.keys(obj).forEach(function (key) {
+	        var existing = prev[key];
+	        if (existing) {
+	          // allow multiple mutation objects to contain duplicate
+	          // handlers for the same mutation type
+	          if (Array.isArray(existing)) {
+	            prev[key] = existing.concat(obj[key]);
+	          } else {
+	            prev[key] = [existing].concat(obj[key]);
+	          }
+	        } else {
+	          prev[key] = obj[key];
+	        }
+	      });
+	      return prev;
+	    }, {});
 	  }
 
-	  return this;
-	};
+	  /**
+	   * Check whether the given value is Object or not
+	   *
+	   * @param {*} obj
+	   * @return {Boolean}
+	   */
 
-	EventEmitter.prototype.on = EventEmitter.prototype.addListener;
-
-	EventEmitter.prototype.once = function (type, listener) {
-	  if (!isFunction(listener)) throw TypeError('listener must be a function');
-
-	  var fired = false;
-
-	  function g() {
-	    this.removeListener(type, g);
-
-	    if (!fired) {
-	      fired = true;
-	      listener.apply(this, arguments);
-	    }
+	  function isObject(obj) {
+	    return obj !== null && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object';
 	  }
 
-	  g.listener = listener;
-	  this.on(type, g);
+	  /**
+	   * Get state sub tree by given keys.
+	   *
+	   * @param {Object} state
+	   * @param {Array<String>} nestedKeys
+	   * @return {Object}
+	   */
+	  function getNestedState(state, nestedKeys) {
+	    return nestedKeys.reduce(function (state, key) {
+	      return state[key];
+	    }, state);
+	  }
 
-	  return this;
-	};
+	  /**
+	   * Hacks to get access to Vue internals.
+	   * Maybe we should expose these...
+	   */
 
-	// emits a 'removeListener' event iff the listener was removed
-	EventEmitter.prototype.removeListener = function (type, listener) {
-	  var list, position, length, i;
-
-	  if (!isFunction(listener)) throw TypeError('listener must be a function');
-
-	  if (!this._events || !this._events[type]) return this;
-
-	  list = this._events[type];
-	  length = list.length;
-	  position = -1;
-
-	  if (list === listener || isFunction(list.listener) && list.listener === listener) {
-	    delete this._events[type];
-	    if (this._events.removeListener) this.emit('removeListener', type, listener);
-	  } else if (isObject(list)) {
-	    for (i = length; i-- > 0;) {
-	      if (list[i] === listener || list[i].listener && list[i].listener === listener) {
-	        position = i;
-	        break;
-	      }
+	  var Watcher = void 0;
+	  function getWatcher(vm) {
+	    if (!Watcher) {
+	      var noop = function noop() {};
+	      var unwatch = vm.$watch(noop, noop);
+	      Watcher = vm._watchers[0].constructor;
+	      unwatch();
 	    }
+	    return Watcher;
+	  }
 
-	    if (position < 0) return this;
+	  var Dep = void 0;
+	  function getDep(vm) {
+	    if (!Dep) {
+	      Dep = vm._data.__ob__.dep.constructor;
+	    }
+	    return Dep;
+	  }
 
-	    if (list.length === 1) {
-	      list.length = 0;
-	      delete this._events[type];
+	  var hook = typeof window !== 'undefined' && window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
+
+	  function devtoolPlugin(store) {
+	    if (!hook) return;
+
+	    hook.emit('vuex:init', store);
+
+	    hook.on('vuex:travel-to-state', function (targetState) {
+	      store.replaceState(targetState);
+	    });
+
+	    store.subscribe(function (mutation, state) {
+	      hook.emit('vuex:mutation', mutation, state);
+	    });
+	  }
+
+	  function override(Vue) {
+	    var version = Number(Vue.version.split('.')[0]);
+
+	    if (version >= 2) {
+	      var usesInit = Vue.config._lifecycleHooks.indexOf('init') > -1;
+	      Vue.mixin(usesInit ? { init: vuexInit } : { beforeCreate: vuexInit });
 	    } else {
-	      list.splice(position, 1);
+	      (function () {
+	        // override init and inject vuex init procedure
+	        // for 1.x backwards compatibility.
+	        var _init = Vue.prototype._init;
+	        Vue.prototype._init = function () {
+	          var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	          options.init = options.init ? [vuexInit].concat(options.init) : vuexInit;
+	          _init.call(this, options);
+	        };
+	      })();
 	    }
 
-	    if (this._events.removeListener) this.emit('removeListener', type, listener);
-	  }
+	    /**
+	     * Vuex init hook, injected into each instances init hooks list.
+	     */
 
-	  return this;
-	};
+	    function vuexInit() {
+	      var options = this.$options;
+	      var store = options.store;
+	      var vuex = options.vuex;
+	      // store injection
 
-	EventEmitter.prototype.removeAllListeners = function (type) {
-	  var key, listeners;
+	      if (store) {
+	        this.$store = store;
+	      } else if (options.parent && options.parent.$store) {
+	        this.$store = options.parent.$store;
+	      }
+	      // vuex option handling
+	      if (vuex) {
+	        if (!this.$store) {
+	          console.warn('[vuex] store not injected. make sure to ' + 'provide the store option in your root component.');
+	        }
+	        var state = vuex.state;
+	        var actions = vuex.actions;
+	        var getters = vuex.getters;
+	        // handle deprecated state option
 
-	  if (!this._events) return this;
-
-	  // not listening for removeListener, no need to emit
-	  if (!this._events.removeListener) {
-	    if (arguments.length === 0) this._events = {};else if (this._events[type]) delete this._events[type];
-	    return this;
-	  }
-
-	  // emit removeListener for all listeners on all events
-	  if (arguments.length === 0) {
-	    for (key in this._events) {
-	      if (key === 'removeListener') continue;
-	      this.removeAllListeners(key);
+	        if (state && !getters) {
+	          console.warn('[vuex] vuex.state option will been deprecated in 1.0. ' + 'Use vuex.getters instead.');
+	          getters = state;
+	        }
+	        // getters
+	        if (getters) {
+	          options.computed = options.computed || {};
+	          for (var key in getters) {
+	            defineVuexGetter(this, key, getters[key]);
+	          }
+	        }
+	        // actions
+	        if (actions) {
+	          options.methods = options.methods || {};
+	          for (var _key in actions) {
+	            options.methods[_key] = makeBoundAction(this.$store, actions[_key], _key);
+	          }
+	        }
+	      }
 	    }
-	    this.removeAllListeners('removeListener');
-	    this._events = {};
-	    return this;
-	  }
 
-	  listeners = this._events[type];
+	    /**
+	     * Setter for all getter properties.
+	     */
 
-	  if (isFunction(listeners)) {
-	    this.removeListener(type, listeners);
-	  } else if (listeners) {
-	    // LIFO order
-	    while (listeners.length) {
-	      this.removeListener(type, listeners[listeners.length - 1]);
+	    function setter() {
+	      throw new Error('vuex getter properties are read-only.');
 	    }
+
+	    /**
+	     * Define a Vuex getter on an instance.
+	     *
+	     * @param {Vue} vm
+	     * @param {String} key
+	     * @param {Function} getter
+	     */
+
+	    function defineVuexGetter(vm, key, getter) {
+	      if (typeof getter !== 'function') {
+	        console.warn('[vuex] Getter bound to key \'vuex.getters.' + key + '\' is not a function.');
+	      } else {
+	        Object.defineProperty(vm, key, {
+	          enumerable: true,
+	          configurable: true,
+	          get: makeComputedGetter(vm.$store, getter),
+	          set: setter
+	        });
+	      }
+	    }
+
+	    /**
+	     * Make a computed getter, using the same caching mechanism of computed
+	     * properties. In addition, it is cached on the raw getter function using
+	     * the store's unique cache id. This makes the same getter shared
+	     * across all components use the same underlying watcher, and makes
+	     * the getter evaluated only once during every flush.
+	     *
+	     * @param {Store} store
+	     * @param {Function} getter
+	     */
+
+	    function makeComputedGetter(store, getter) {
+	      var id = store._getterCacheId;
+
+	      // cached
+	      if (getter[id]) {
+	        return getter[id];
+	      }
+	      var vm = store._vm;
+	      var Watcher = getWatcher(vm);
+	      var Dep = getDep(vm);
+	      var watcher = new Watcher(vm, function (vm) {
+	        return getter(vm.state);
+	      }, null, { lazy: true });
+	      var computedGetter = function computedGetter() {
+	        if (watcher.dirty) {
+	          watcher.evaluate();
+	        }
+	        if (Dep.target) {
+	          watcher.depend();
+	        }
+	        return watcher.value;
+	      };
+	      getter[id] = computedGetter;
+	      return computedGetter;
+	    }
+
+	    /**
+	     * Make a bound-to-store version of a raw action function.
+	     *
+	     * @param {Store} store
+	     * @param {Function} action
+	     * @param {String} key
+	     */
+
+	    function makeBoundAction(store, action, key) {
+	      if (typeof action !== 'function') {
+	        console.warn('[vuex] Action bound to key \'vuex.actions.' + key + '\' is not a function.');
+	      }
+	      return function vuexBoundAction() {
+	        for (var _len = arguments.length, args = Array(_len), _key2 = 0; _key2 < _len; _key2++) {
+	          args[_key2] = arguments[_key2];
+	        }
+
+	        return action.call.apply(action, [this, store].concat(args));
+	      };
+	    }
+
+	    // option merging
+	    var merge = Vue.config.optionMergeStrategies.computed;
+	    Vue.config.optionMergeStrategies.vuex = function (toVal, fromVal) {
+	      if (!toVal) return fromVal;
+	      if (!fromVal) return toVal;
+	      return {
+	        getters: merge(toVal.getters, fromVal.getters),
+	        state: merge(toVal.state, fromVal.state),
+	        actions: merge(toVal.actions, fromVal.actions)
+	      };
+	    };
 	  }
-	  delete this._events[type];
 
-	  return this;
-	};
+	  var Vue = void 0;
+	  var uid = 0;
 
-	EventEmitter.prototype.listeners = function (type) {
-	  var ret;
-	  if (!this._events || !this._events[type]) ret = [];else if (isFunction(this._events[type])) ret = [this._events[type]];else ret = this._events[type].slice();
-	  return ret;
-	};
+	  var Store = function () {
 
-	EventEmitter.prototype.listenerCount = function (type) {
-	  if (this._events) {
-	    var evlistener = this._events[type];
+	    /**
+	     * @param {Object} options
+	     *        - {Object} state
+	     *        - {Object} actions
+	     *        - {Object} mutations
+	     *        - {Array} plugins
+	     *        - {Boolean} strict
+	     */
 
-	    if (isFunction(evlistener)) return 1;else if (evlistener) return evlistener.length;
+	    function Store() {
+	      var _this = this;
+
+	      var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	      var _ref$state = _ref.state;
+	      var state = _ref$state === undefined ? {} : _ref$state;
+	      var _ref$mutations = _ref.mutations;
+	      var mutations = _ref$mutations === undefined ? {} : _ref$mutations;
+	      var _ref$modules = _ref.modules;
+	      var modules = _ref$modules === undefined ? {} : _ref$modules;
+	      var _ref$plugins = _ref.plugins;
+	      var plugins = _ref$plugins === undefined ? [] : _ref$plugins;
+	      var _ref$strict = _ref.strict;
+	      var strict = _ref$strict === undefined ? false : _ref$strict;
+	      classCallCheck(this, Store);
+
+	      this._getterCacheId = 'vuex_store_' + uid++;
+	      this._dispatching = false;
+	      this._rootMutations = this._mutations = mutations;
+	      this._modules = modules;
+	      this._subscribers = [];
+	      // bind dispatch to self
+	      var dispatch = this.dispatch;
+	      this.dispatch = function () {
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	          args[_key] = arguments[_key];
+	        }
+
+	        dispatch.apply(_this, args);
+	      };
+	      // use a Vue instance to store the state tree
+	      // suppress warnings just in case the user has added
+	      // some funky global mixins
+	      if (!Vue) {
+	        throw new Error('[vuex] must call Vue.use(Vuex) before creating a store instance.');
+	      }
+	      var silent = Vue.config.silent;
+	      Vue.config.silent = true;
+	      this._vm = new Vue({
+	        data: {
+	          state: state
+	        }
+	      });
+	      Vue.config.silent = silent;
+	      this._setupModuleState(state, modules);
+	      this._setupModuleMutations(modules);
+	      // add extra warnings in strict mode
+	      if (strict) {
+	        this._setupMutationCheck();
+	      }
+	      // apply plugins
+	      devtoolPlugin(this);
+	      plugins.forEach(function (plugin) {
+	        return plugin(_this);
+	      });
+	    }
+
+	    /**
+	     * Getter for the entire state tree.
+	     * Read only.
+	     *
+	     * @return {Object}
+	     */
+
+	    createClass(Store, [{
+	      key: 'replaceState',
+
+	      /**
+	       * Replace root state.
+	       *
+	       * @param {Object} state
+	       */
+
+	      value: function replaceState(state) {
+	        this._dispatching = true;
+	        this._vm.state = state;
+	        this._dispatching = false;
+	      }
+
+	      /**
+	       * Dispatch an action.
+	       *
+	       * @param {String} type
+	       */
+
+	    }, {
+	      key: 'dispatch',
+	      value: function dispatch(type) {
+	        var _this2 = this;
+
+	        for (var _len2 = arguments.length, payload = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	          payload[_key2 - 1] = arguments[_key2];
+	        }
+
+	        var silent = false;
+	        var isObjectStyleDispatch = false;
+	        // compatibility for object actions, e.g. FSA
+	        if ((typeof type === 'undefined' ? 'undefined' : _typeof(type)) === 'object' && type.type && arguments.length === 1) {
+	          isObjectStyleDispatch = true;
+	          payload = type;
+	          if (type.silent) silent = true;
+	          type = type.type;
+	        }
+	        var handler = this._mutations[type];
+	        var state = this.state;
+	        if (handler) {
+	          this._dispatching = true;
+	          // apply the mutation
+	          if (Array.isArray(handler)) {
+	            handler.forEach(function (h) {
+	              isObjectStyleDispatch ? h(state, payload) : h.apply(undefined, [state].concat(toConsumableArray(payload)));
+	            });
+	          } else {
+	            isObjectStyleDispatch ? handler(state, payload) : handler.apply(undefined, [state].concat(toConsumableArray(payload)));
+	          }
+	          this._dispatching = false;
+	          if (!silent) {
+	            (function () {
+	              var mutation = isObjectStyleDispatch ? payload : { type: type, payload: payload };
+	              _this2._subscribers.forEach(function (sub) {
+	                return sub(mutation, state);
+	              });
+	            })();
+	          }
+	        } else {
+	          console.warn('[vuex] Unknown mutation: ' + type);
+	        }
+	      }
+
+	      /**
+	       * Watch state changes on the store.
+	       * Same API as Vue's $watch, except when watching a function,
+	       * the function gets the state as the first argument.
+	       *
+	       * @param {Function} fn
+	       * @param {Function} cb
+	       * @param {Object} [options]
+	       */
+
+	    }, {
+	      key: 'watch',
+	      value: function watch(fn, cb, options) {
+	        var _this3 = this;
+
+	        if (typeof fn !== 'function') {
+	          console.error('Vuex store.watch only accepts function.');
+	          return;
+	        }
+	        return this._vm.$watch(function () {
+	          return fn(_this3.state);
+	        }, cb, options);
+	      }
+
+	      /**
+	       * Subscribe to state changes. Fires after every mutation.
+	       */
+
+	    }, {
+	      key: 'subscribe',
+	      value: function subscribe(fn) {
+	        var subs = this._subscribers;
+	        if (subs.indexOf(fn) < 0) {
+	          subs.push(fn);
+	        }
+	        return function () {
+	          var i = subs.indexOf(fn);
+	          if (i > -1) {
+	            subs.splice(i, 1);
+	          }
+	        };
+	      }
+
+	      /**
+	       * Hot update mutations & modules.
+	       *
+	       * @param {Object} options
+	       *        - {Object} [mutations]
+	       *        - {Object} [modules]
+	       */
+
+	    }, {
+	      key: 'hotUpdate',
+	      value: function hotUpdate() {
+	        var _ref2 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	        var mutations = _ref2.mutations;
+	        var modules = _ref2.modules;
+
+	        this._rootMutations = this._mutations = mutations || this._rootMutations;
+	        this._setupModuleMutations(modules || this._modules);
+	      }
+
+	      /**
+	       * Attach sub state tree of each module to the root tree.
+	       *
+	       * @param {Object} state
+	       * @param {Object} modules
+	       */
+
+	    }, {
+	      key: '_setupModuleState',
+	      value: function _setupModuleState(state, modules) {
+	        var _this4 = this;
+
+	        if (!isObject(modules)) return;
+
+	        Object.keys(modules).forEach(function (key) {
+	          var module = modules[key];
+
+	          // set this module's state
+	          Vue.set(state, key, module.state || {});
+
+	          // retrieve nested modules
+	          _this4._setupModuleState(state[key], module.modules);
+	        });
+	      }
+
+	      /**
+	       * Bind mutations for each module to its sub tree and
+	       * merge them all into one final mutations map.
+	       *
+	       * @param {Object} updatedModules
+	       */
+
+	    }, {
+	      key: '_setupModuleMutations',
+	      value: function _setupModuleMutations(updatedModules) {
+	        var modules = this._modules;
+	        Object.keys(updatedModules).forEach(function (key) {
+	          modules[key] = updatedModules[key];
+	        });
+	        var updatedMutations = this._createModuleMutations(modules, []);
+	        this._mutations = mergeObjects([this._rootMutations].concat(toConsumableArray(updatedMutations)));
+	      }
+
+	      /**
+	       * Helper method for _setupModuleMutations.
+	       * The method retrieve nested sub modules and
+	       * bind each mutations to its sub tree recursively.
+	       *
+	       * @param {Object} modules
+	       * @param {Array<String>} nestedKeys
+	       * @return {Array<Object>}
+	       */
+
+	    }, {
+	      key: '_createModuleMutations',
+	      value: function _createModuleMutations(modules, nestedKeys) {
+	        var _this5 = this;
+
+	        if (!isObject(modules)) return [];
+
+	        return Object.keys(modules).map(function (key) {
+	          var module = modules[key];
+	          var newNestedKeys = nestedKeys.concat(key);
+
+	          // retrieve nested modules
+	          var nestedMutations = _this5._createModuleMutations(module.modules, newNestedKeys);
+
+	          if (!module || !module.mutations) {
+	            return mergeObjects(nestedMutations);
+	          }
+
+	          // bind mutations to sub state tree
+	          var mutations = {};
+	          Object.keys(module.mutations).forEach(function (name) {
+	            var original = module.mutations[name];
+	            mutations[name] = function (state) {
+	              for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+	                args[_key3 - 1] = arguments[_key3];
+	              }
+
+	              original.apply(undefined, [getNestedState(state, newNestedKeys)].concat(args));
+	            };
+	          });
+
+	          // merge mutations of this module and nested modules
+	          return mergeObjects([mutations].concat(toConsumableArray(nestedMutations)));
+	        });
+	      }
+
+	      /**
+	       * Setup mutation check: if the vuex instance's state is mutated
+	       * outside of a mutation handler, we throw en error. This effectively
+	       * enforces all mutations to the state to be trackable and hot-reloadble.
+	       * However, this comes at a run time cost since we are doing a deep
+	       * watch on the entire state tree, so it is only enalbed with the
+	       * strict option is set to true.
+	       */
+
+	    }, {
+	      key: '_setupMutationCheck',
+	      value: function _setupMutationCheck() {
+	        var _this6 = this;
+
+	        var Watcher = getWatcher(this._vm);
+	        /* eslint-disable no-new */
+	        new Watcher(this._vm, 'state', function () {
+	          if (!_this6._dispatching) {
+	            throw new Error('[vuex] Do not mutate vuex store state outside mutation handlers.');
+	          }
+	        }, { deep: true, sync: true });
+	        /* eslint-enable no-new */
+	      }
+	    }, {
+	      key: 'state',
+	      get: function get() {
+	        return this._vm.state;
+	      },
+	      set: function set(v) {
+	        throw new Error('[vuex] Use store.replaceState() to explicit replace store state.');
+	      }
+	    }]);
+	    return Store;
+	  }();
+
+	  function install(_Vue) {
+	    if (Vue) {
+	      console.warn('[vuex] already installed. Vue.use(Vuex) should be called only once.');
+	      return;
+	    }
+	    Vue = _Vue;
+	    override(Vue);
 	  }
-	  return 0;
-	};
 
-	EventEmitter.listenerCount = function (emitter, type) {
-	  return emitter.listenerCount(type);
-	};
+	  // auto install in dist mode
+	  if (typeof window !== 'undefined' && window.Vue) {
+	    install(window.Vue);
+	  }
 
-	function isFunction(arg) {
-	  return typeof arg === 'function';
-	}
+	  var index = {
+	    Store: Store,
+	    install: install
+	  };
 
-	function isNumber(arg) {
-	  return typeof arg === 'number';
-	}
-
-	function isObject(arg) {
-	  return (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'object' && arg !== null;
-	}
-
-	function isUndefined(arg) {
-	  return arg === void 0;
-	}
+	  return index;
+	});
 
 /***/ },
 /* 7 */
@@ -6869,7 +7266,7 @@
 
 
 	// module
-	exports.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+	exports.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 	// exports
 
@@ -7153,7 +7550,7 @@
 
 /***/ },
 /* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
@@ -7161,25 +7558,21 @@
 	  value: true
 	});
 
-	var _store = __webpack_require__(5);
 
-	var _store2 = _interopRequireDefault(_store);
+	var toggleMenu = function toggleMenu(_ref) {
+	  var dispatch = _ref.dispatch;
+	  var state = _ref.state;
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	  console.log('Action called from menulink component: TOGGLE_MENU');
+	  dispatch('TOGGLE_MENU');
+	};
 
 	exports.default = {
-	  data: function data() {
-	    return {
-	      state: _store2.default.state
-	    };
-	  },
-
-	  methods: {
-	    showMenu: function showMenu() {
-	      _store2.default.emit('toggleMenu');
+	  vuex: {
+	    actions: {
+	      showMenu: toggleMenu
 	    }
-	  },
-	  components: {}
+	  }
 	};
 
 /***/ },
@@ -7259,7 +7652,7 @@
 
 /***/ },
 /* 18 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
@@ -7267,32 +7660,31 @@
 	  value: true
 	});
 
-	var _store = __webpack_require__(5);
+	var toggleMenu = function toggleMenu(_ref) {
+	  var dispatch = _ref.dispatch;
+	  var state = _ref.state;
 
-	var _store2 = _interopRequireDefault(_store);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	  dispatch('TOGGLE_MENU');
+	};
 
 	exports.default = {
-	  data: function data() {
-	    return {
-	      state: _store2.default.state
-	    };
-	  },
-
-	  methods: {
-	    closeMenu: function closeMenu() {
-	      _store2.default.emit('toggleMenu');
+	  vuex: {
+	    getters: {
+	      menuShown: function menuShown(state) {
+	        return state.menuShown;
+	      }
+	    },
+	    actions: {
+	      closeMenu: toggleMenu
 	    }
-	  },
-	  components: {}
+	  }
 	};
 
 /***/ },
 /* 19 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n<div class=\"menu-close\"\n  @click=\"closeMenu\"\n  v-bind:class=\"{ 'shown': state.menuShown }\"></div>\n\n<section class=\"menu\" v-bind:class=\"{ 'shown': state.menuShown }\">\n  <ul class=\"links\">\n    <li><a v-link=\"{ path: '/' }\">Home</a></li>\n    <li><a v-link=\"{ path: '/posts' }\">Posts</a></li>\n    <li><a v-link=\"{ path: '/github' }\">Github</a></li>\n    <li><a href=\"https://twitter.com/brianmgonzalez\">Twitter</a></li>\n    <li><a v-link=\"{ path: '/about' }\">About</a></li>\n  </ul>\n</section>\n";
+	module.exports = "\n\n<div class=\"menu-close\"\n  @click=\"closeMenu\"\n  v-bind:class=\"{ 'shown': menuShown }\"></div>\n\n<section class=\"menu\" v-bind:class=\"{ 'shown': menuShown }\">\n  <ul class=\"links\">\n    <li><a v-link=\"{ path: '/' }\">Home</a></li>\n    <li><a v-link=\"{ path: '/posts' }\">Posts</a></li>\n    <li><a v-link=\"{ path: '/github' }\">Github</a></li>\n    <li><a href=\"https://twitter.com/brianmgonzalez\">Twitter</a></li>\n    <li><a v-link=\"{ path: '/about' }\">About</a></li>\n  </ul>\n</section>\n";
 
 /***/ },
 /* 20 */
@@ -7358,14 +7750,14 @@
 
 
 	// module
-	exports.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+	exports.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 	// exports
 
 
 /***/ },
 /* 23 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
@@ -7373,34 +7765,38 @@
 	  value: true
 	});
 
-	var _store = __webpack_require__(5);
+	var fetchTopGithubRepos = function fetchTopGithubRepos(_ref, page) {
+	  var dispatch = _ref.dispatch;
+	  var state = _ref.state;
 
-	var _store2 = _interopRequireDefault(_store);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	  dispatch('FETCH_TOP_GITHUB_REPOS', page);
+	};
 
 	exports.default = {
-	  data: function data() {
-	    return {
-	      state: _store2.default.state
-	    };
+	  vuex: {
+	    getters: {
+	      topRepos: function topRepos(state) {
+	        return state.github.topRepos;
+	      }
+	    },
+	    actions: {
+	      fetchTopGithubRepos: fetchTopGithubRepos
+	    }
 	  },
-
 	  created: function created() {
+	    var _this = this;
 
 	    [1, 2, 3, 4, 5].forEach(function (i) {
-	      _store2.default.fetchTopGithubRepos(i);
+	      _this.fetchTopGithubRepos(i);
 	    });
-	  },
-	  methods: {},
-	  components: {}
+	  }
 	};
 
 /***/ },
 /* 24 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n<ul class=\"github-repos\">\n  <li v-for=\"repo of state.github.topRepos\">\n    <a href=\"{{repo.html_url}}\">\n      <h2>{{ repo.name }}</h2>\n      <small>{{ repo.stargazers_count }} stars / {{ repo.forks }} forks</small>\n    </a>\n  </li>\n</ul>\n";
+	module.exports = "\n\n<ul class=\"github-repos\">\n  <li v-for=\"repo of topRepos\">\n    <a href=\"{{repo.html_url}}\">\n      <h2>{{ repo.name }}</h2>\n      <small>{{ repo.stargazers_count }} stars / {{ repo.forks }} forks</small>\n    </a>\n  </li>\n</ul>\n";
 
 /***/ }
 /******/ ]);
