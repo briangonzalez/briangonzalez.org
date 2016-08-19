@@ -1,11 +1,4 @@
 
-// (function () {
-//   require('particles.js');
-//   particlesJS.load('body', '/js/particlesjs-config.json', function() {
-//     console.log('callback - particles.js config loaded');
-//   });
-// })();
-
 import hljs from './highlight';
 hljs.configure({});
 hljs.initHighlightingOnLoad();
@@ -30,6 +23,7 @@ const components = { Menulink, Menu, GithubRepos, };
 //
 const App = Vue.extend({
   components,
+  store,
   el: () => 'body',
   data: function() {
     return {
@@ -105,7 +99,7 @@ router.beforeEach( function (transition) {
     transition.next();          // Default action for already loaded content.
   }
 
-  store.emit('hideMenu');
+  // store.emit('hideMenu');
   window.updateBodyURL();
   window.scrollTo(0,0);
 

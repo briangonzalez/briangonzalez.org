@@ -6,21 +6,18 @@
 </template>
 
 <script>
-  import store from '../store';
+
+  const toggleMenu = function ({ dispatch, state }) {
+    console.log('Action called from menulink component: TOGGLE_MENU')
+    dispatch('TOGGLE_MENU');
+  };
 
   export default {
-    data () {
-      return {
-        state: store.state
+    vuex: {
+      actions: {
+        showMenu: toggleMenu
       }
     },
-    methods: {
-      showMenu: function () {
-        store.emit('toggleMenu');
-      }
-    },
-    components: {
-    }
   }
 </script>
 

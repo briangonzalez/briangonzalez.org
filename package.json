@@ -35,6 +35,7 @@
     "vue-loader": "^8.2.3",
     "vue-router": "^0.7.13",
     "vue-style-loader": "^1.0.0",
+    "vuex": "^1.0.0-rc.2",
     "whatwg-fetch": "^0.11.1"
   },
   "devDependencies": {

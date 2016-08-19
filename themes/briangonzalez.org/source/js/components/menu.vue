@@ -2,9 +2,9 @@
 <template>
   <div class="menu-close"
     @click="closeMenu"
-    v-bind:class="{ 'shown': state.menuShown }"></div>
+    v-bind:class="{ 'shown': menuShown }"></div>
 
-  <section class="menu" v-bind:class="{ 'shown': state.menuShown }">
+  <section class="menu" v-bind:class="{ 'shown': menuShown }">
     <ul class="links">
       <li><a v-link="{ path: '/' }">Home</a></li>
       <li><a v-link="{ path: '/posts' }">Posts</a></li>
@@ -16,21 +16,21 @@
 </template>
 
 <script>
-  import store from '../store';
+  const toggleMenu = function ({ dispatch, state }) {
+    dispatch('TOGGLE_MENU');
+  };
 
   export default {
-    data () {
-      return {
-        state: store.state
+    vuex: {
+      getters: {
+        menuShown: (state)  => {
+          return state.menuShown;
+        }
+      },
+      actions: {
+        closeMenu: toggleMenu
       }
     },
-    methods: {
-      closeMenu: function () {
-        store.emit('toggleMenu');
-      }
-    },
-    components: {
-    }
   }
 </script>
 
