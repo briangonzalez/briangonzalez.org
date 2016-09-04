@@ -8,7 +8,6 @@
 <script>
 
   const toggleMenu = function ({ dispatch, state }) {
-    console.log('Action called from menulink component: TOGGLE_MENU')
     dispatch('TOGGLE_MENU');
   };
 

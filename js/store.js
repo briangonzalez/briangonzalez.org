@@ -18,6 +18,9 @@ const mutations = {
   TOGGLE_MENU(state) {
     state.menuShown = !state.menuShown;
   },
+  HIDE_MENU(state) {
+    state.menuShown = false;
+  },
   FETCH_TOP_GITHUB_REPOS(state, page) {
     fetch(`https://api.github.com/users/briangonzalez/repos?page=${page}`)
     .then(function(response) {
@@ -42,15 +45,18 @@ const mutations = {
   }
 };
 
-document.addEventListener('keydown', (event) => {
-  if (event.which === 27) {
-    mutations.TOGGLE_MENU(state);
-  }
+const store = new Vuex.Store({
+  state,
+  mutations
 });
 
 // Combine the initial state and the mutations to create a Vuex store.
 // This store can be linked to our app.
-export default new Vuex.Store({
-  state,
-  mutations
-})
+export default store;
+
+document.addEventListener('keydown', (event) => {
+  if (event.which === 27) {
+    // mutations.TOGGLE_MENU(state);
+    store.dispatch('TOGGLE_MENU');
+  }
+});

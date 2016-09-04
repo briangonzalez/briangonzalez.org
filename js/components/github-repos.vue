@@ -3,7 +3,7 @@
   <ul class="github-repos">
     <li v-for="repo of topRepos">
       <a href="{{repo.html_url}}">
-        <h2>{{ repo.name }}</h2>
+        <p>{{ repo.name }}</p>
         <small>{{ repo.stargazers_count }} stars / {{ repo.forks }} forks</small>
       </a>
     </li>

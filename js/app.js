@@ -94,17 +94,6 @@
 	  store: _store2.default,
 	  el: function el() {
 	    return 'body';
-	  },
-	  data: function data() {
-	    return {
-	      state: _store2.default.state,
-	      currentView: 'github-repos'
-	    };
-	  },
-	  methods: {
-	    submit: function submit() {
-	      _store2.default.emit('toggleMenu');
-	    }
 	  }
 	});
 
@@ -166,8 +155,10 @@
 	    initialLoad = false;
 	    transition.next(); // Default action for already loaded content.
 	  }
+	});
 
-	  // store.emit('hideMenu');
+	router.afterEach(function () {
+	  _store2.default.dispatch('HIDE_MENU');
 	  window.updateBodyURL();
 	  window.scrollTo(0, 0);
 	});
@@ -3172,7 +3163,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {/*!
-	 * Vue.js v1.0.25
+	 * Vue.js v1.0.26
 	 * (c) 2016 Evan You
 	 * Released under the MIT License.
 	 */'use strict';var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};function set(obj,key,val){if(hasOwn(obj,key)){obj[key]=val;return;}if(obj._isVue){set(obj._data,key,val);return;}var ob=obj.__ob__;if(!ob){obj[key]=val;return;}ob.convert(key,val);ob.dep.notify();if(ob.vms){var i=ob.vms.length;while(i--){var vm=ob.vms[i];vm._proxy(key);vm._digest();}}return val;}/**
@@ -3670,10 +3661,10 @@
 	 * @param {Element} el
 	 * @return {String}
 	 */function getOuterHTML(el){if(el.outerHTML){return el.outerHTML;}else{var container=document.createElement('div');container.appendChild(el.cloneNode(true));return container.innerHTML;}}var commonTagRE=/^(div|p|span|img|a|b|i|br|ul|ol|li|h1|h2|h3|h4|h5|h6|code|pre|table|th|td|tr|form|label|input|select|option|nav|article|section|header|footer)$/i;var reservedTagRE=/^(slot|partial|component)$/i;var isUnknownElement=undefined;if(process.env.NODE_ENV!=='production'){isUnknownElement=function isUnknownElement(el,tag){if(tag.indexOf('-')>-1){// http://stackoverflow.com/a/28210364/1070244
-	return el.constructor===window.HTMLUnknownElement||el.constructor===window.HTMLElement;}else{return (/HTMLUnknownElement/.test(el.toString())&&// Chrome returns unknown for several HTML5 elements.
+	return el.constructor===window.HTMLUnknownElement||el.constructor===window.HTMLElement;}else{return /HTMLUnknownElement/.test(el.toString())&&// Chrome returns unknown for several HTML5 elements.
 	// https://code.google.com/p/chromium/issues/detail?id=540526
 	// Firefox returns unknown for some "Interactive elements."
-	!/^(data|time|rtc|rb|details|dialog|summary)$/.test(tag));}};}/**
+	!/^(data|time|rtc|rb|details|dialog|summary)$/.test(tag);}};}/**
 	 * Check if an element is a component, if yes return its
 	 * component id.
 	 *
@@ -4165,7 +4156,7 @@
 	 * is collected as a "deep" dependency.
 	 *
 	 * @param {*} val
-	 */var seenObjects=new _Set();function traverse(val,seen){var i=undefined,keys=undefined;if(!seen){seen=seenObjects;seen.clear();}var isA=isArray(val);var isO=isObject(val);if(isA||isO){if(val.__ob__){var depId=val.__ob__.dep.id;if(seen.has(depId)){return;}else{seen.add(depId);}}if(isA){i=val.length;while(i--){traverse(val[i],seen);}}else if(isO){keys=Object.keys(val);i=keys.length;while(i--){traverse(val[keys[i]],seen);}}}}var text$1={bind:function bind(){this.attr=this.el.nodeType===3?'data':'textContent';},update:function update(value){this.el[this.attr]=_toString(value);}};var templateCache=new Cache(1000);var idSelectorCache=new Cache(1000);var map={efault:[0,'',''],legend:[1,'<fieldset>','</fieldset>'],tr:[2,'<table><tbody>','</tbody></table>'],col:[2,'<table><tbody></tbody><colgroup>','</colgroup></table>']};map.td=map.th=[3,'<table><tbody><tr>','</tr></tbody></table>'];map.option=map.optgroup=[1,'<select multiple="multiple">','</select>'];map.thead=map.tbody=map.colgroup=map.caption=map.tfoot=[1,'<table>','</table>'];map.g=map.defs=map.symbol=map.use=map.image=map.text=map.circle=map.ellipse=map.line=map.path=map.polygon=map.polyline=map.rect=[1,'<svg '+'xmlns="http://www.w3.org/2000/svg" '+'xmlns:xlink="http://www.w3.org/1999/xlink" '+'xmlns:ev="http://www.w3.org/2001/xml-events"'+'version="1.1">','</svg>'];/**
+	 */var seenObjects=new _Set();function traverse(val,seen){var i=undefined,keys=undefined;if(!seen){seen=seenObjects;seen.clear();}var isA=isArray(val);var isO=isObject(val);if((isA||isO)&&Object.isExtensible(val)){if(val.__ob__){var depId=val.__ob__.dep.id;if(seen.has(depId)){return;}else{seen.add(depId);}}if(isA){i=val.length;while(i--){traverse(val[i],seen);}}else if(isO){keys=Object.keys(val);i=keys.length;while(i--){traverse(val[keys[i]],seen);}}}}var text$1={bind:function bind(){this.attr=this.el.nodeType===3?'data':'textContent';},update:function update(value){this.el[this.attr]=_toString(value);}};var templateCache=new Cache(1000);var idSelectorCache=new Cache(1000);var map={efault:[0,'',''],legend:[1,'<fieldset>','</fieldset>'],tr:[2,'<table><tbody>','</tbody></table>'],col:[2,'<table><tbody></tbody><colgroup>','</colgroup></table>']};map.td=map.th=[3,'<table><tbody><tr>','</tr></tbody></table>'];map.option=map.optgroup=[1,'<select multiple="multiple">','</select>'];map.thead=map.tbody=map.colgroup=map.caption=map.tfoot=[1,'<table>','</table>'];map.g=map.defs=map.symbol=map.use=map.image=map.text=map.circle=map.ellipse=map.line=map.path=map.polygon=map.polyline=map.rect=[1,'<svg '+'xmlns="http://www.w3.org/2000/svg" '+'xmlns:xlink="http://www.w3.org/1999/xlink" '+'xmlns:ev="http://www.w3.org/2001/xml-events"'+'version="1.1">','</svg>'];/**
 	 * Check if a node is a supported template node with a
 	 * DocumentFragment content.
 	 *
@@ -4522,7 +4513,7 @@
 	// selectedIndex with value -1 to 0 when the element
 	// is appended to a new parent, therefore we have to
 	// force a DOM update whenever that happens...
-	this.vm.$on('hook:attached',function(){nextTick(_this.forceUpdate);});},update:function update(value){var el=this.el;if(!inDoc(el)){return nextTick(this.forceUpdate);}el.selectedIndex=-1;var multi=this.multiple&&isArray(value);var options=el.options;var i=options.length;var op,val;while(i--){op=options[i];val=op.hasOwnProperty('_value')?op._value:op.value;/* eslint-disable eqeqeq */op.selected=multi?indexOf$1(value,val)>-1:looseEqual(value,val);/* eslint-enable eqeqeq */}},unbind:function unbind(){/* istanbul ignore next */this.vm.$off('hook:attached',this.forceUpdate);}};/**
+	this.vm.$on('hook:attached',function(){nextTick(_this.forceUpdate);});if(!inDoc(el)){nextTick(this.forceUpdate);}},update:function update(value){var el=this.el;el.selectedIndex=-1;var multi=this.multiple&&isArray(value);var options=el.options;var i=options.length;var op,val;while(i--){op=options[i];val=op.hasOwnProperty('_value')?op._value:op.value;/* eslint-disable eqeqeq */op.selected=multi?indexOf$1(value,val)>-1:looseEqual(value,val);/* eslint-enable eqeqeq */}},unbind:function unbind(){/* istanbul ignore next */this.vm.$off('hook:attached',this.forceUpdate);}};/**
 	 * Get select value
 	 *
 	 * @param {SelectElement} el
@@ -5872,7 +5863,7 @@
 	   *  entry in the array.
 	   *
 	   *  e.g. ['single', 'double', 'triple', 'multiple']
-	   */pluralize:function pluralize(value){var args=toArray(arguments,1);return args.length>1?args[value%10-1]||args[args.length-1]:args[0]+(value===1?'':'s');},/**
+	   */pluralize:function pluralize(value){var args=toArray(arguments,1);var length=args.length;if(length>1){var index=value%10-1;return index in args?args[index]:args[length-1];}else{return args[0]+(value===1?'':'s');}},/**
 	   * Debounce a handler function.
 	   *
 	   * @param {Function} handler
@@ -5924,7 +5915,7 @@
 	   * @param {String} id
 	   * @param {*} definition
 	   */config._assetTypes.forEach(function(type){Vue[type]=function(id,definition){if(!definition){return this.options[type+'s'][id];}else{/* istanbul ignore if */if(process.env.NODE_ENV!=='production'){if(type==='component'&&(commonTagRE.test(id)||reservedTagRE.test(id))){warn('Do not use built-in or reserved HTML elements as component '+'id: '+id);}}if(type==='component'&&isPlainObject(definition)){if(!definition.name){definition.name=id;}definition=Vue.extend(definition);}this.options[type+'s'][id]=definition;return definition;}};});// expose internal transition API
-	extend(Vue.transition,transition);}installGlobalAPI(Vue);Vue.version='1.0.25';// devtools global hook
+	extend(Vue.transition,transition);}installGlobalAPI(Vue);Vue.version='1.0.26';// devtools global hook
 	/* istanbul ignore next */setTimeout(function(){if(config.devtools){if(devtools){devtools.emit('init',Vue);}else if(process.env.NODE_ENV!=='production'&&inBrowser&&/Chrome\/\d+/.test(window.navigator.userAgent)){console.log('Download the Vue Devtools for a better development experience:\n'+'https://github.com/vuejs/vue-devtools');}}},0);module.exports=Vue;
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(4)))
 
@@ -5935,7 +5926,6 @@
 	'use strict';
 
 	// shim for using process in browser
-
 	var process = module.exports = {};
 
 	// cached from whatever global is present so that test runners that stub it
@@ -5946,22 +5936,79 @@
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout() {
+	    throw new Error('clearTimeout has not been defined');
+	}
 	(function () {
 	    try {
-	        cachedSetTimeout = setTimeout;
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
 	    } catch (e) {
-	        cachedSetTimeout = function cachedSetTimeout() {
-	            throw new Error('setTimeout is not defined');
-	        };
+	        cachedSetTimeout = defaultSetTimout;
 	    }
 	    try {
-	        cachedClearTimeout = clearTimeout;
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
 	    } catch (e) {
-	        cachedClearTimeout = function cachedClearTimeout() {
-	            throw new Error('clearTimeout is not defined');
-	        };
+	        cachedClearTimeout = defaultClearTimeout;
 	    }
 	})();
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch (e) {
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch (e) {
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e) {
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e) {
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -5986,7 +6033,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -6003,7 +6050,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout(timeout);
+	    runClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -6015,7 +6062,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 
@@ -6096,6 +6143,9 @@
 	  TOGGLE_MENU: function TOGGLE_MENU(state) {
 	    state.menuShown = !state.menuShown;
 	  },
+	  HIDE_MENU: function HIDE_MENU(state) {
+	    state.menuShown = false;
+	  },
 	  FETCH_TOP_GITHUB_REPOS: function FETCH_TOP_GITHUB_REPOS(state, page) {
 	    fetch('https://api.github.com/users/briangonzalez/repos?page=' + page).then(function (response) {
 	      return response.json();
@@ -6123,17 +6173,21 @@
 	  }
 	};
 
-	document.addEventListener('keydown', function (event) {
-	  if (event.which === 27) {
-	    mutations.TOGGLE_MENU(state);
-	  }
+	var store = new _vuex2.default.Store({
+	  state: state,
+	  mutations: mutations
 	});
 
 	// Combine the initial state and the mutations to create a Vuex store.
 	// This store can be linked to our app.
-	exports.default = new _vuex2.default.Store({
-	  state: state,
-	  mutations: mutations
+	exports.default = store;
+
+
+	document.addEventListener('keydown', function (event) {
+	  if (event.which === 27) {
+	    // mutations.TOGGLE_MENU(state);
+	    store.dispatch('TOGGLE_MENU');
+	  }
 	});
 
 /***/ },
@@ -6948,8 +7002,8 @@
 	        // Only support ArrayBuffers for POST method.
 	        // Receiving ArrayBuffers happens via Blobs, instead.
 	      } else {
-	          throw new Error('unsupported BodyInit type');
-	        }
+	        throw new Error('unsupported BodyInit type');
+	      }
 
 	      if (!this.headers.get('content-type')) {
 	        if (typeof body === 'string') {
@@ -7266,7 +7320,7 @@
 
 
 	// module
-	exports.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+	exports.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 	// exports
 
@@ -7563,7 +7617,6 @@
 	  var dispatch = _ref.dispatch;
 	  var state = _ref.state;
 
-	  console.log('Action called from menulink component: TOGGLE_MENU');
 	  dispatch('TOGGLE_MENU');
 	};
 
@@ -7796,7 +7849,7 @@
 /* 24 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n<ul class=\"github-repos\">\n  <li v-for=\"repo of topRepos\">\n    <a href=\"{{repo.html_url}}\">\n      <h2>{{ repo.name }}</h2>\n      <small>{{ repo.stargazers_count }} stars / {{ repo.forks }} forks</small>\n    </a>\n  </li>\n</ul>\n";
+	module.exports = "\n\n<ul class=\"github-repos\">\n  <li v-for=\"repo of topRepos\">\n    <a href=\"{{repo.html_url}}\">\n      <p>{{ repo.name }}</p>\n      <small>{{ repo.stargazers_count }} stars / {{ repo.forks }} forks</small>\n    </a>\n  </li>\n</ul>\n";
 
 /***/ }
 /******/ ]);
