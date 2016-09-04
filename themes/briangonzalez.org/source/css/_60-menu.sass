@@ -12,10 +12,11 @@ body
     animation-fill-mode: forwards
 
   a.logo
+    // color: white
     color: $color-blue
     height: $grid-unit * 2
     width: $grid-unit * 2
-    background: white
+    // background: $color-blue
     text-align: center
     line-height: $grid-unit * 2
     z-index: $z-logo
@@ -24,7 +25,7 @@ body
       display: none
 
   a.menulink
-    color: white
+    color: $color-blue
     left: auto
     right: $grid-unit * 2
     animation: $anim-speed-fast slide-from-left $anim-ease-out-expo
@@ -44,14 +45,14 @@ body
 
   .menu
     pointer-events: none
-    border: $grid-unit/2 solid $color-blue
+    // border: $grid-unit/2 solid $color-blue
     display: flex
     position: fixed
     top: 0
     left: 0
     right: 0
     bottom: 0
-    background: $color-orange + 30
+    background: $color-blue
     opacity: 0
     align-items: center
     justify-content: center
@@ -66,7 +67,7 @@ body
       padding: 0
 
       a
-        color: $color-blue
+        color: $color-light
         font-size: $grid-unit * 1.5
         font-weight: 700
         line-height: $grid-unit * 2
@@ -76,7 +77,7 @@ body
           line-height: $grid-unit * 4
 
         &::before
-          background: rgba($color-blue, 0.1)
+          background: rgba($color-light, 0.2)
 
       li
         opacity: 0
@@ -112,7 +113,7 @@ body
     &::after
       display: block
       content: ''
-      background: $color-blue
+      background: $color-light
       width: $grid-unit * 2
       height: 3px
       transform: rotateZ(0) translate3d(0,0,0)

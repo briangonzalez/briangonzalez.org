@@ -25,17 +25,6 @@ const App = Vue.extend({
   components,
   store,
   el: () => 'body',
-  data: function() {
-    return {
-      state: store.state,
-      currentView: 'github-repos',
-    };
-  },
-  methods: {
-    submit: function () {
-      store.emit('toggleMenu');
-    }
-  },
 });
 
 //
@@ -50,7 +39,7 @@ router.map({});
 var routerMap = {};
 var initialLoad = true;
 
-router.beforeEach( function (transition) {
+router.beforeEach((transition) => {
 
   var path = transition.to.path;
 
@@ -99,10 +88,12 @@ router.beforeEach( function (transition) {
     transition.next();          // Default action for already loaded content.
   }
 
-  // store.emit('hideMenu');
+});
+
+router.afterEach(() => {
+  store.dispatch('HIDE_MENU');
   window.updateBodyURL();
   window.scrollTo(0,0);
-
 });
 
 router.start(App, 'body');

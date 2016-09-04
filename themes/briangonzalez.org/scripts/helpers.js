@@ -7,8 +7,8 @@ var postsToLi = function (posts) {
     return `
       <li>
         <a v-link="{ path: '/${post.path}' }" href="/${post.path}">
-          <h2>${post.title}</h2>
-          <date>Published ${post.date}</date>
+          <h4>${post.title}</h4>
+          <date>${post.date}</date>
         </a>
       <li>
     `
@@ -36,7 +36,7 @@ hexo.extend.helper.register("postsByYear", function () {
   Object.keys(postsByYear)
   .sort(function (a, b) { return b > a; })
   .forEach(function (year) {
-    html.push(`<h3>${year}</h3>`)
+    html.push(`<h3>– ${year}</h3>`)
     html.push(`<ul class="posts">${postsToLi(postsByYear[year])}</ul>`);
   });
 

@@ -8,27 +8,17 @@ html, body
   padding: 0
 
 ::selection
-  background: $color-blue + 40
-
-.loader
-  display: none
-  position: fixed
-  top: 0
-  bottom: 0
-  left: 0
-  right: 0
-  background: $color-orange
-  z-index: 20
+  background: $color-blue
+  color: white
 
 html
-  background: $color-blue
-  background: linear-gradient(to right, $color-blue + 5 0%, $color-blue - 5 100%)
+  background: $color-light
 
 body
-  color: white
+  color: $color-blue
   font-size: $grid-unit
   font-family: $font-family
-  font-weight: 300
+  font-weight: 400
   line-height: $grid-unit * 2
   text-rendering: optimizeLegibility
   -webkit-font-smoothing: antialiased
@@ -36,35 +26,3 @@ body
   display: flex
   min-height: 100vh
   flex-direction: column
-
-.body-border
-  content: ''
-  border: $grid-unit/2 solid white
-  position: fixed
-  top: 0
-  right: 0
-  bottom: 0
-  left: 0
-  z-index: 1
-  pointer-events: none
-  display: none
-
-body:before,
-body:after
-  content: ""
-  position: fixed
-  background: white
-  left: 0
-  right: 0
-  height: $grid-unit/2
-  z-index: 1
-
-body:before
-  top: 0
-
-body:after
-  bottom: 0
-
-body
-  border-left: $grid-unit/2 solid white
-  border-right: $grid-unit/2 solid white
