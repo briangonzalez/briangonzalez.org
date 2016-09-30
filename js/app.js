@@ -7737,7 +7737,7 @@
 /* 19 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n<div class=\"menu-close\"\n  @click=\"closeMenu\"\n  v-bind:class=\"{ 'shown': menuShown }\"></div>\n\n<section class=\"menu\" v-bind:class=\"{ 'shown': menuShown }\">\n  <ul class=\"links\">\n    <li><a v-link=\"{ path: '/' }\">Home</a></li>\n    <li><a v-link=\"{ path: '/posts' }\">Posts</a></li>\n    <li><a v-link=\"{ path: '/github' }\">Github</a></li>\n    <li><a href=\"https://twitter.com/brianmgonzalez\">Twitter</a></li>\n    <li><a v-link=\"{ path: '/about' }\">About</a></li>\n  </ul>\n</section>\n";
+	module.exports = "\n\n<div class=\"menu-close\"\n  @click=\"closeMenu\"\n  v-bind:class=\"{ 'shown': menuShown }\"></div>\n\n<section class=\"menu\" v-bind:class=\"{ 'shown': menuShown }\">\n  <ul class=\"links\">\n    <li><a v-link=\"{ path: '/' }\">Home</a></li>\n    <li><a v-link=\"{ path: '/' }\">Posts</a></li>\n    <li><a href=\"https://github.com/briangonzalez\">Github</a></li>\n    <li><a href=\"https://twitter.com/brianmgonzalez\">Twitter</a></li>\n    <li><a v-link=\"{ path: '/about' }\">About</a></li>\n  </ul>\n</section>\n";
 
 /***/ },
 /* 20 */
