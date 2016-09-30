@@ -10,19 +10,19 @@ I was listening to [Adventures in Elm by Jessica Kerr](https://www.youtube.com/w
 
 The idea is that, due to the contraints of a statically typed language like Elm, you’re forced into writing code that your future self has an easier time reasoning about. I get it.
 
-It’s this very notion which has led to a lot of shaming of Javascript as of late. 
+It’s this very notion which has led to a lot of shaming of Javascript as of late.
 
 I, however, think the conversation is more nuanced.
 
 As someone who enjoys mentoring new developers, the utililty of opening literally any browser and pressing `CMD + OPT + i` to invoke a REPL and tinker and prototype and explore cannot be understated. Javascript is fast, expressive, and it runs everywhere.
 
-I do believe maintainability is crucial. However, shortening the path to gratification, _especially for new developers_, is invaluable. 
+I do believe maintainability is crucial. However, shortening the path to gratification, _especially for new developers_, is invaluable.
 
 ## Your Speed
 
-https://johnrchildress.files.wordpress.com/2012/05/yourspeed1.jpg
+<img src='your-speed.jpg' alt='Your Speed traffic sign' style="width: 200px;">
 
-Consider the “Your Speed” traffic sign, which embodies the [Evidence, Relevance, Consequences, and Action Feedback loop cycle](https://www.wired.com/2011/06/ff_feedbackloop/). 
+Consider the “Your Speed” traffic sign, which embodies the [Evidence, Relevance, Consequences, and Action Feedback loop cycle](https://www.wired.com/2011/06/ff_feedbackloop/).
 
 - The driver is immediately shown evidence that they’re speeding
 - It’s put into perspective by contrasting the speed limit
