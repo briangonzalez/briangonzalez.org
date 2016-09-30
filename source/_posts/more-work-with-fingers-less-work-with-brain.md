@@ -22,7 +22,7 @@ I do believe maintainability is crucial. However, shortening the path to gratifi
 
 <img src='your-speed.jpg' alt='Your Speed traffic sign' style="width: 200px;">
 
-Consider the “Your Speed” traffic sign, which embodies the [Evidence, Relevance, Consequences, and Action Feedback loop cycle](https://www.wired.com/2011/06/ff_feedbackloop/).
+Consider the “Your Speed” traffic sign, which embodies the Evidence, Relevance, Consequences, and Action Feedback loop cycle concept – outlined [here](https://www.wired.com/2011/06/ff_feedbackloop/).
 
 - The driver is immediately shown evidence that they’re speeding
 - It’s put into perspective by contrasting the speed limit

@@ -15,9 +15,10 @@ a
     background: rgba($color-blue, 0.1)
     height: 6px
     width: 100%
-    transition: all $anim-speed-med $anim-ease-out-expo
+    transition: height $anim-speed-fast $anim-ease-out-expo
     z-index: -1
 
   &:hover::before
     opacity: 1
-    transform: translate3d(0, 2px, 0)
+    height: 15px
+    background: rgba($color-teal, 0.1)
