@@ -1,18 +1,18 @@
 var moment = require('moment');
 
-module.exports = function(hexo) {
+module.exports = (hexo) => {
   return {
 
-    foo: function(posts) {
-      return posts.data.map(function (document) {
-        return document.title;
-      });
-    },
-
-    calendarDate: function(date) {
+    calendarDate(date) {
       date = Date.parse(date.toString());
+      console.log(date);
       return moment(date).calendar();
     },
+
+    formatDate(date, format){
+      date = Date.parse(date.toString());
+      return moment(date).format(format);
+    }
 
   };
 };

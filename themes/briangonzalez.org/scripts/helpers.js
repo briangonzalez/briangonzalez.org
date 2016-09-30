@@ -1,3 +1,4 @@
+var moment = require('moment');
 
 var postsToLi = function (posts) {
   return posts.sort(function (postA, postB) {
@@ -8,7 +9,7 @@ var postsToLi = function (posts) {
       <li>
         <a v-link="{ path: '/${post.path}' }" href="/${post.path}">
           <h4>${post.title}</h4>
-          <date>${post.date}</date>
+          <date>${moment(post.date).format('MM/DD')}</date>
         </a>
       <li>
     `
