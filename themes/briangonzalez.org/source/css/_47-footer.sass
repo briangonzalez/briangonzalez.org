@@ -1,6 +1,6 @@
 footer
   @extend %container
-  background: $color-blue + 5
+  background: white
   padding-top: $grid-unit * 5
   margin-top: $grid-unit * 5
 
@@ -17,9 +17,6 @@ footer
 
     +from($bp-tablet)
       margin-top: 0
-
-    body[data-url^="/github"] &
-      background-image: url("/images/footer-brian-dark.png")
 
   ul,
   .image
@@ -42,7 +39,7 @@ footer
         text-align: left
 
       a, a:hover
-        color: white
+        color: $color-blue
         font-size: $grid-unit * 1.5
 
   body[data-url="/"] &
